@@ -19,16 +19,22 @@
                                     <div class="input-group-prepend">
                                         <span class="input-group-text"><i class="ni ni-circle-08"></i></span>
                                     </div>
-                                    <input class="form-control" placeholder="Name" name="name" type="text">
+                                    <input class="form-control" name="name" type="search" value="{{old('name', null)}}" placeholder="Name">
                                 </div>
+                                @error('name')
+                                    <span class="text-danger"><small><b><i>{{$message}}</i></b></small> </span>
+                                @enderror
                             </div>
                             <div class="form-group">
                                 <div class="input-group input-group-merge input-group-alternative mb-3">
                                     <div class="input-group-prepend">
                                         <span class="input-group-text"><i class="ni ni-email-83"></i></span>
                                     </div>
-                                    <input class="form-control" placeholder="Email" name="email" type="email">
+                                    <input class="form-control" placeholder="Email" value="{{old('email', null)}}" name="email" type="email">
                                 </div>
+                                @error('email')
+                                   <span class="text-danger"><small><b><i>{{$message}}</i></b></small> </span>
+                                @enderror
                             </div>
                             <div class="form-group">
                                 <div class="input-group input-group-merge input-group-alternative">
@@ -37,6 +43,9 @@
                                     </div>
                                     <input class="form-control" placeholder="Password" name="password" type="password">
                                 </div>
+                                @error('password')
+                                   <span class="text-danger"><small><b><i>{{$message}}</i></b></small> </span>
+                                @enderror
                             </div>
                             <div class="form-group">
                                 <div class="input-group input-group-merge input-group-alternative">
@@ -45,36 +54,48 @@
                                     </div>
                                     <input class="form-control" placeholder="Password Confrimation" name="password_confirmation" type="password">
                                 </div>
+                                @error('password_confirmation')
+                                   <span class="text-danger"><small><b><i>{{$message}}</i></b></small> </span>
+                                @enderror
                             </div>
                             <div class="form-group">
                                 <div class="custom-control custom-control-alternative custom-radio">
-                                    <input class="custom-control-input" value="Admin" id="adminrole" name="roles" type="radio">
+                                    <input class="custom-control-input" value="Admin" id="adminrole" name="roles" type="radio" {{(old('roles') == 'Admin') ? 'checked' : null}}>
                                     <label class="custom-control-label" for="adminrole">
                                         <span class="text-muted">Admin </span>
                                     </label>
                                 </div>
                                 <div class="custom-control custom-control-alternative custom-radio">
-                                    <input class="custom-control-input" value="User" id="userrole" name="roles" type="radio">
+                                    <input class="custom-control-input" value="User" id="userrole" name="roles" type="radio" {{(old('roles') == 'User') ? 'checked' : null}}>
                                     <label class="custom-control-label" for="userrole">
                                         <span class="text-muted">User </span>
                                     </label>
                                 </div>
+                                @error('roles')
+                                   <span class="text-danger"><small><b><i>{{$message}}</i></b></small> </span>
+                                @enderror
                             </div>
                                 <div class="form-group">
                                     <div class="input-group input-group-merge input-group-alternative">
                                         <div class="input-group-prepend">
                                             <span class="input-group-text"><i class="ni ni-square-pin"></i></span>
                                         </div>
-                                        <textarea name="address" class="form-control" id="" cols="30" rows="3">Alamat</textarea>
+                                        <textarea name="address" class="form-control" id="" cols="30" rows="3"> {{old('address', 'Alamat')}}</textarea>
                                     </div>
+                                @error('address')
+                                   <span class="text-danger"><small><b><i>{{$message}}</i></b></small> </span>
+                                @enderror
                                 </div>
                                 <div class="form-group">
                                     <div class="input-group input-group-merge input-group-alternative">
                                         <div class="input-group-prepend">
                                             <span class="input-group-text"><i class="ni ni-tablet-button"></i></span>
                                         </div>
-                                        <input class="form-control" placeholder="Phone Number" name="text" type="number">
+                                        <input class="form-control" value="{{old('phone', null)}}" placeholder="Phone Number" name="phone" type="search">
                                     </div>
+                                @error('phone')
+                                   <span class="text-danger"><small><b><i>{{$message}}</i></b></small> </span>
+                                @enderror
                                 </div>
                                 <div class="form-group">
                                     <div class="col-md-12 mb-2">
@@ -87,6 +108,9 @@
                                         </div>
                                         <input class="form-control" id="avatar" name="avatar" type="file">
                                     </div>
+                                @error('avatar')
+                                   <span class="text-danger"><small><b><i>{{$message}}</i></b></small> </span>
+                                @enderror
                                 </div>
                             <div class="text-center">
                                 <button type="submit" class="btn btn-primary mt-4">Create account</button>

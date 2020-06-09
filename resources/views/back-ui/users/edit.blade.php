@@ -56,8 +56,15 @@
                             </button>
                         </div>
                         <div class="modal-body">
-                            <form action="{{route('users.change_password',$user->id)}} " method="post">
+                            @if(session('successChangePassword')) <div class="alert alert-success alert-dismissible fade show text-center" role="alert">
+                                <span class="alert-icon"><i class="ni ni-like-2"></i></span> {{session('successChangePassword')}}
+                                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>@endif
+                            <form action="{{route('users.update',$user->id)}} " method="post">
                             @csrf
+                            <input type="hidden" value="PUT" name="_method">
                             <div class="form-group">
                                 <div class="input-group input-group-merge input-group-alternative">
                                     <div class="input-group-prepend">
@@ -65,6 +72,9 @@
                                     </div>
                                     <input class="form-control" placeholder="Old Password" name="old_password" type="password">
                                 </div>
+                                @if (session('notMatch'))
+                                    <span class="text-danger"><small><b><i>{{session('notMatch')}}</i></b></small> </span>
+                                @endif
                             </div>
                             <div class="form-group">
                                 <div class="input-group input-group-merge input-group-alternative">
@@ -73,6 +83,9 @@
                                     </div>
                                     <input class="form-control" placeholder="New Password" name="new_password" type="password">
                                 </div>
+                                @error('new_password')
+                                    <span class="text-danger"><small><b><i>{{$message}}</i></b></small> </span>
+                                @enderror
                             </div>
                             <div class="form-group">
                                 <div class="input-group input-group-merge input-group-alternative">
@@ -81,12 +94,15 @@
                                     </div>
                                     <input class="form-control" placeholder="New Password Confrimation" name="conf_password" type="password">
                                 </div>
+                                @error('conf_password')
+                                    <span class="text-danger"><small><b><i>{{$message}}</i></b></small> </span>
+                                @enderror
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                <button type="submit" name="updatePassword" class="btn btn-primary">Save changes</button>
                             </div>
                             </form>
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                            <button type="submit" class="btn btn-primary">Save changes</button>
                         </div>
                     </div>
                 </div>
@@ -110,6 +126,9 @@
                                         <div class="form-group">
                                             <label class="form-control-label" for="input-name">Nama</label>
                                             <input type="text" id="input-name" class="form-control" placeholder="name" name="name" value="{{$user->name}}"> 
+                                            @error('name')
+                                                <span class="text-danger"><small><b><i>{{$message}}</i></b></small> </span>
+                                            @enderror
                                         </div>
                                     </div>
                                     <div class="col-lg-6">
@@ -117,6 +136,9 @@
                                             <label class="form-control-label" for="input-email">Email address</label>
                                             <input type="email" id="input-email" name="email" class="form-control"
                                                 placeholder="email" value="{{$user->email}}"> 
+                                                @error('email')
+                                                    <span class="text-danger"><small><b><i>{{$message}}</i></b></small> </span>
+                                                @enderror
                                         </div>
                                     </div>
                                 </div>
@@ -143,6 +165,9 @@
                                             <label class="form-control-label" for="input-phone">Phone</label>
                                             <input type="text" id="input-phone" class="form-control" placeholder="phone" name="phone"
                                                 value="{{$user->phone}} ">
+                                            @error('phone')
+                                                <span class="text-danger"><small><b><i>{{$message}}</i></b></small> </span>
+                                            @enderror
                                         </div>
                                     </div>
                                 </div>
@@ -151,11 +176,14 @@
                                         <div class="form-group">
                                             <label class="form-control-label">Address</label>
                                             <textarea rows="4" cols="30" class="form-control" name="address" placeholder="address">{{$user->address}} </textarea>
+                                            @error('address')
+                                                <span class="text-danger"><small><b><i>{{$message}}</i></b></small> </span>
+                                            @enderror
                                         </div>
                                     </div>
                                 </div>
                                 <div class="text-left">
-                                    <button type="submit" class="btn btn-primary mt-4">Edit User</button>
+                                    <button type="submit" name="updateInformation" class="btn btn-primary mt-4">Edit User</button>
                                 </div>
                             </div>
                         </form>
@@ -163,4 +191,13 @@
                 </div>
             </div>
         </div>
+@endsection
+@section('js')
+    @if (session('notMatch') || $errors->has('new_password') || $errors->has('conf_password') || session('successChangePassword'))
+        <script>
+        $(function() {
+            $('#ubahpassword').modal('show');
+        });
+        </script>
+    @endif
 @endsection

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
 
 class UserController extends Controller
 {
@@ -13,10 +14,10 @@ class UserController extends Controller
      */
     public function index(Request $request)
     {
-        $users = \App\User::paginate(10);
+        $users = \App\User::paginate(5);
         $filterKeyword = $request->get('keyword');
         if ($filterKeyword) {
-            $users = \App\User::where('name', 'LIKE', "%$filterKeyword%")->paginate(10);
+            $users = \App\User::where('name', 'LIKE', "%$filterKeyword%")->paginate(5);
         }
 
         return view('back-ui.users.index', ['users' => $users]);
@@ -40,13 +41,24 @@ class UserController extends Controller
      */
     public function store(Request $request)
     {
+        $request->validate([
+            'name' => 'required|regex:/^[a-zA-Z]+$/u|max:50',
+            'email' => 'required|unique:App\User,email',
+            'roles' => 'required',
+            'address' => 'required|max:255',
+            'phone' => 'required|regex:\+?([ -]?\d+)+|\(\d+\)([ -]\d+)|unique:phone',
+            'password' => 'required|min:8|max:50',
+            'password_confirmation' => 'required|min:8|same:password',
+            'avatar' => 'required|mimes:png,jpg,jpeg'
+        ]);
+
         $user = new \App\User;
         $user->name = $request->get('name');
         $user->email = $request->get('email');
         $user->roles = $request->get('roles');
         $user->address = $request->get('address');
         $user->phone = $request->get('phone');
-        $user->password = bcrypt($request->get('password'));
+        $user->password = Hash::make($request->get('password'));
 
         if ($request->file('avatar')) {
             $file = $request->file('avatar')->store('avatars', 'public');
@@ -90,20 +102,42 @@ class UserController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $user = \App\User::findOrFail($id);
+        if ($request->has('updateInformation')) {
+            $request->validate([
+                'name' => 'required|regex:/^[\pL\s\-]+$/u|max:50',
+                'email' => 'required|unique:App\User,email,'.$id,
+                'roles' => 'required',
+                'phone' => 'required|unique:App\User,phone,'.$id,
+                'address' => 'required|max:255'
+            ]);
+    
+            $user = \App\User::findOrFail($id);
+    
+            $user->name = $request->get('name');
+            $user->email = $request->get('email');
+            $user->roles = $request->get('roles');
+            $user->phone = $request->get('phone');
+            $user->address = $request->get('address');
+    
+            $user->save();
+            return redirect()->route('users.edit', $id)->with('success', 'Data berhasil diubah');
+        }elseif ($request->has('updatePassword')) {
+            
+            $user = \App\User::findOrFail($id);
+            
+            if (!Hash::check($request->get('old_password'), $user->password)) {
+                return redirect()->route('users.edit', $id)->with('notMatch', 'Password doesnt match with current/old password ');
+                die;
+            }
+            
+            $request->validate([
+                'new_password' => 'required|min:8',
+                'conf_password' => 'same:new_password|min:8'
+            ]);
 
-        $user->name = $request->get('name');
-        $user->email = $request->get('email');
-        $user->roles = $request->get('roles');
-        $user->phone = $request->get('phone');
-        $user->address = $request->get('address');
-
-        $user->save();
-        return redirect()->route('users.edit', $id)->with('success', 'Data berhasil diubah');
-    }
-
-    public function change_password(Request $request, $id){
-        //
+            $user->update(['password'=> Hash::make($request->new_password)]);
+            return redirect()->route('users.edit', $id)->with('successChangePassword', 'Password berhasil diubah');
+        }
     }
 
     /**
