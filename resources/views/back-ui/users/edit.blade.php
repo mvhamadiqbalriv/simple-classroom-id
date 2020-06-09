@@ -7,11 +7,22 @@
             <div class="col-xl-4 order-xl-2 col-centered">
                 <div class="card card-profile">
                     <img src="{{asset('template/back-ui/img/theme/img-1-1000x600.jpg')}}" alt="Image placeholder" class="card-img-top">
+                        @if(session('successChangeAvatar')) <div class="alert alert-success alert-dismissible fade show text-center ava-change" role="alert">
+                            <span class="alert-icon"><i class="ni ni-like-2"></i></span> {{session('successChangeAvatar')}}
+                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>@endif
                     <div class="row justify-content-center">
                         <div class="col-lg-3 order-lg-2">
                             <div class="card-profile-image">
                                 <a href="#">
-                                    <img src="{{asset('storage/'.$user->avatar)}}" width="150" height="150" style="object-fit: cover" class="rounded-circle">
+                                    <form action="{{route('users.update', $user->id)}} " method="POST" enctype="multipart/form-data">
+                                        @csrf
+                                        <input type="hidden" value="PUT" name="_method">
+                                        <img type="image" id="imageClick" src="{{asset('storage/'.$user->avatar)}}" width="150" height="150" style="object-fit: cover" class="rounded-circle" title="Ubah Gambar">
+                                        <input type="file" id="avatar" name="avatar" style="display:none" onchange="form.submit()">
+                                    </form>
                                 </a>
                             </div>
                         </div>
@@ -23,6 +34,9 @@
                             <div class="col">
                                 <div class="card-profile-stats d-flex justify-content-center">
                                     <div>
+                                         @error('avatar')
+                                            <span class="text-danger"><small><b><i>{{$message}}</i></b></small> </span>
+                                        @enderror
                                         <span class="heading">10</span>
                                         <span class="description">Kelas</span>
                                     </div>
@@ -200,4 +214,10 @@
         });
         </script>
     @endif
+    <script>
+        $("#imageClick").click(function() {
+            $("input[id='avatar']").click();
+        });
+    </script> 
+    
 @endsection

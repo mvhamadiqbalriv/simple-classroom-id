@@ -49,7 +49,7 @@ class UserController extends Controller
             'phone' => 'required|regex:\+?([ -]?\d+)+|\(\d+\)([ -]\d+)|unique:phone',
             'password' => 'required|min:8|max:50',
             'password_confirmation' => 'required|min:8|same:password',
-            'avatar' => 'required|mimes:png,jpg,jpeg'
+            'avatar' => 'required|file|image|mimes:jpeg,png,gif,webp,jpg|max:2048'
         ]);
 
         $user = new \App\User;
@@ -137,6 +137,20 @@ class UserController extends Controller
 
             $user->update(['password'=> Hash::make($request->new_password)]);
             return redirect()->route('users.edit', $id)->with('successChangePassword', 'Password berhasil diubah');
+        }elseif ($request->has('avatar')) {
+            $request->validate([
+                'avatar' => 'required|mimes:jpeg,png,gif,webp,jpg|max:2048'
+            ]);
+
+            $user = \App\User::findOrFail($id);
+
+            if ($user->avatar && file_exists(storage_path('app/public/' . $user->avatar))) {
+                \Storage::delete('public/' . $user->avatar);
+                $file = $request->file('avatar')->store('avatars', 'public');
+                $user->avatar = $file;
+            }
+            $user->save();
+            return redirect()->route('users.edit', $id)->with('successChangeAvatar', 'Avatar berhasil diubah');
         }
     }
 
