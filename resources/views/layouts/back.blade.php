@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <title> @yield('title') </title>
+    <title> @yield('title') - SCID</title>
     <!-- Favicon -->
     <link rel="icon" href="{{asset('template/back-ui/img/brand/favicon.png')}}" type="image/png">
     <!-- Fonts -->
@@ -30,13 +30,13 @@
                         <!-- Nav items -->
                         <ul class="navbar-nav">
                             <li class="nav-item">
-                                <a class="nav-link active" href="dashboard.html">
+                                <a class="nav-link {{ request()->is('home') ? 'active' : '' }}" href="{{route('home')}}">
                                     <i class="ni ni-tv-2 text-primary"></i>
                                     <span class="nav-link-text">Dashboard</span>
                                 </a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" href="{{route('users.index')}} ">
+                                <a class="nav-link {{ request()->is('users*') ? 'active' : '' }}" href="{{route('users.index')}} ">
                                     <i class="ni ni-single-02 text-yellow"></i>
                                     <span class="nav-link-text">User</span>
                                 </a>
@@ -90,7 +90,7 @@
                                     aria-expanded="false">
                                     <div class="media align-items-center">
                                         <span class="avatar avatar-sm rounded-circle">
-                                            <?php $url = Auth::user()->avatar ?>
+                                            <?php $url = (Auth::user()->avatar) ? Auth::user()->avatar : 'avatars/default.png'  ?>
                                             <img alt="Image placeholder" src="{{asset('storage/'.$url)}}" width="36" height="36" style="object-fit: cover">
                                         </span>
                                         <div class="media-body  ml-2  d-none d-lg-block">
@@ -102,12 +102,11 @@
                                     <div class="dropdown-header noti-title">
                                         <h6 class="text-overflow m-0">Welcome!</h6>
                                     </div>
-                                    <!--TODO-->
-                                    {{-- <a href="#!" class="dropdown-item">
-                                        <i class="ni ni-single-02"></i>
+                                    <a href="{{route('users.show', Auth::user()->username)}} " class="dropdown-item">
+                                    <i class="ni ni-single-02"></i>
                                         <span>My profile</span>
                                     </a>
-                                    <a href="#!" class="dropdown-item">
+                                    {{-- <a href="#!" class="dropdown-item">
                                         <i class="ni ni-settings-gear-65"></i>
                                         <span>Settings</span>
                                     </a> --}}
@@ -130,20 +129,18 @@
                     <div class="header-body">
                         <div class="row align-items-center py-4">
                             <div class="col-lg-6 col-7">
-                                <h6 class="h2 text-white d-inline-block mb-0">Default</h6>
+                                <h6 class="h2 text-white d-inline-block mb-0">@yield('title')</h6>
                                 <nav aria-label="breadcrumb" class="d-none d-md-inline-block ml-md-4">
-                                    <ol class="breadcrumb breadcrumb-links breadcrumb-dark">
+                                    @yield('breadcrumb')
+                                    {{-- <ol class="breadcrumb breadcrumb-links breadcrumb-dark">
                                         <li class="breadcrumb-item"><a href="#"><i class="fas fa-home"></i></a></li>
                                         <li class="breadcrumb-item"><a href="#">Dashboards</a></li>
                                         <li class="breadcrumb-item active" aria-current="page">Default</li>
-                                    </ol>
+                                    </ol> --}}
                                 </nav>
                             </div>
                             <div class="col-lg-6 col-5 text-right">
                                 @yield('add_data')
-                            </div>
-                            <div class="col-lg-12 text-center">
-                                <h3 class="text-white">@yield('title')</h3>
                             </div>
                         </div>
                     </div>

@@ -1,7 +1,11 @@
 @extends('layouts.back')
-
+@section('title')
+    Dashboard
+@endsection
+@section('breadcrumb')
+    {{ Breadcrumbs::render('home') }}
+@endsection
 @section('content')
-
 <div class="container-fluid mt--6">
     <div class="row justify-content-center">
         <div class=" col ">

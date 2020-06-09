@@ -3,6 +3,9 @@
 @section('title')
     Tambah User
 @endsection
+@section('breadcrumb')
+    {{ Breadcrumbs::render('user_create') }}
+@endsection
 @section('content')
 
 <div class="container">
@@ -22,6 +25,17 @@
                                     <input class="form-control" name="name" type="search" value="{{old('name', null)}}" placeholder="Name">
                                 </div>
                                 @error('name')
+                                    <span class="text-danger"><small><b><i>{{$message}}</i></b></small> </span>
+                                @enderror
+                            </div>
+                            <div class="form-group">
+                                <div class="input-group input-group-merge input-group-alternative mb-3">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text"><i class="ni ni-single-02"></i></span>
+                                    </div>
+                                    <input class="form-control" name="username" type="search" value="{{old('username', null)}}" placeholder="Username">
+                                </div>
+                                @error('username')
                                     <span class="text-danger"><small><b><i>{{$message}}</i></b></small> </span>
                                 @enderror
                             </div>

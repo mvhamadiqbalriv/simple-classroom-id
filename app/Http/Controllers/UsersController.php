@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 
-class UserController extends Controller
+class UsersController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -14,10 +14,10 @@ class UserController extends Controller
      */
     public function index(Request $request)
     {
-        $users = \App\User::paginate(5);
+        $users = \App\User::latest()->paginate(5);
         $filterKeyword = $request->get('keyword');
         if ($filterKeyword) {
-            $users = \App\User::where('name', 'LIKE', "%$filterKeyword%")->paginate(5);
+            $users = \App\User::where('name', 'LIKE', "%$filterKeyword%")->latest()->paginate(5);
         }
 
         return view('back-ui.users.index', ['users' => $users]);
@@ -42,18 +42,20 @@ class UserController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'name' => 'required|regex:/^[a-zA-Z]+$/u|max:50',
+            'name' => 'required|regex:/^[\pL\s\-]+$/u|max:50',
+            'username' => 'required|alpha_dash|unique:App\User,username|max:50|min:3',
             'email' => 'required|unique:App\User,email',
             'roles' => 'required',
-            'address' => 'required|max:255',
-            'phone' => 'required|regex:\+?([ -]?\d+)+|\(\d+\)([ -]\d+)|unique:phone',
-            'password' => 'required|min:8|max:50',
+            'address' => 'max:255',
+            'phone' => 'unique:App\User,phone,',
+            'password' => 'required|min:8',
             'password_confirmation' => 'required|min:8|same:password',
-            'avatar' => 'required|file|image|mimes:jpeg,png,gif,webp,jpg|max:2048'
+            'avatar' => 'file|image|mimes:jpeg,png,gif,webp,jpg|max:2048'
         ]);
 
         $user = new \App\User;
         $user->name = $request->get('name');
+        $user->username = $request->get('username');
         $user->email = $request->get('email');
         $user->roles = $request->get('roles');
         $user->address = $request->get('address');
@@ -77,7 +79,9 @@ class UserController extends Controller
      */
     public function show($id)
     {
-        //
+        $user = \App\User::where('username', '=', $id)->first();
+
+        return view('back-ui.users.edit', ['user' => $user]);
     }
 
     /**
@@ -88,7 +92,7 @@ class UserController extends Controller
      */
     public function edit($id)
     {
-        $user = \App\User::findOrFail($id);
+        $user = \App\User::where('username', '=', $id)->first();
 
         return view('back-ui.users.edit', ['user' => $user]);
     }
@@ -102,16 +106,16 @@ class UserController extends Controller
      */
     public function update(Request $request, $id)
     {
+        $user = \App\User::where('username', '=', $id)->first();
+
         if ($request->has('updateInformation')) {
             $request->validate([
                 'name' => 'required|regex:/^[\pL\s\-]+$/u|max:50',
-                'email' => 'required|unique:App\User,email,'.$id,
+                'email' => 'required|unique:App\User,email,'.$user->id,
                 'roles' => 'required',
-                'phone' => 'required|unique:App\User,phone,'.$id,
-                'address' => 'required|max:255'
+                'phone' => ['regex:/\+?([-]?\d+)+|\(\d+\)([-]\d+)/'],
+                'address' => 'max:255'
             ]);
-    
-            $user = \App\User::findOrFail($id);
     
             $user->name = $request->get('name');
             $user->email = $request->get('email');
@@ -123,7 +127,7 @@ class UserController extends Controller
             return redirect()->route('users.edit', $id)->with('success', 'Data berhasil diubah');
         }elseif ($request->has('updatePassword')) {
             
-            $user = \App\User::findOrFail($id);
+            $user = \App\User::where('username', '=', $id)->first();
             
             if (!Hash::check($request->get('old_password'), $user->password)) {
                 return redirect()->route('users.edit', $id)->with('notMatch', 'Password doesnt match with current/old password ');
@@ -139,10 +143,10 @@ class UserController extends Controller
             return redirect()->route('users.edit', $id)->with('successChangePassword', 'Password berhasil diubah');
         }elseif ($request->has('avatar')) {
             $request->validate([
-                'avatar' => 'required|mimes:jpeg,png,gif,webp,jpg|max:2048'
+                'avatar' => 'mimes:jpeg,png,gif,webp,jpg|max:2048'
             ]);
 
-            $user = \App\User::findOrFail($id);
+            $user = \App\User::where('username', '=', $id)->first();
 
             if ($user->avatar && file_exists(storage_path('app/public/' . $user->avatar))) {
                 \Storage::delete('public/' . $user->avatar);
@@ -162,7 +166,7 @@ class UserController extends Controller
      */
     public function destroy($id)
     {
-        $user = \App\User::findOrFail($id);
+        $user = \App\User::where('username', '=', $id)->first();
         $user->delete();
         return redirect()->route('users.index')->with('success', 'Data berhasil dihapus');
     }
