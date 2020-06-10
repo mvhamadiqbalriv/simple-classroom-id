@@ -22,3 +22,4 @@ Auth::routes(['verify' => true]);
 Route::get('/home', 'HomeController@index')->name('home');
 
 Route::resource('users', 'UsersController');
+Route::resource('classrooms', 'ClassroomsController');

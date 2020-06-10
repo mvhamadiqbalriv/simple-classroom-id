@@ -8,19 +8,13 @@
 @section('content')
     <div class="row justify-content-md-center">
             <div class="col-xl-4 order-xl-2 col-centered">
-                @if(session('successChangeAvatar')) <div class="alert alert-success alert-dismissible fade show text-center ava-change" role="alert">
-                    <span class="alert-icon"><i class="ni ni-like-2"></i></span> {{session('successChangeAvatar')}}
-                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>@endif
                 <div class="card card-profile">
                     <img src="{{asset('template/back-ui/img/theme/img-1-1000x600.jpg')}}" alt="Image placeholder" class="card-img-top">
                     <div class="row justify-content-center">
                         <div class="col-lg-3 order-lg-2">
                             <div class="card-profile-image">
                                 <a href="#">
-                                    <form action="{{route('users.update', $user->username)}} " method="POST" enctype="multipart/form-data">
+                                    <form action="{{route('users.update', $user->id)}} " method="POST" enctype="multipart/form-data">
                                         @csrf
                                         <input type="hidden" value="PUT" name="_method">
                                         <?php $url = ($user->avatar) ? $user->avatar : 'avatars/default.png' ?>
@@ -74,13 +68,7 @@
                             </button>
                         </div>
                         <div class="modal-body">
-                            @if(session('successChangePassword')) <div class="alert alert-success alert-dismissible fade show text-center" role="alert">
-                                <span class="alert-icon"><i class="ni ni-like-2"></i></span> {{session('successChangePassword')}}
-                                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                                    <span aria-hidden="true">&times;</span>
-                                </button>
-                            </div>@endif
-                            <form action="{{route('users.update',$user->username)}} " method="post">
+                            <form action="{{route('users.update',$user->id)}} " method="post">
                             @csrf
                             <input type="hidden" value="PUT" name="_method">
                             <div class="form-group">
@@ -125,10 +113,10 @@
                     </div>
                 </div>
             </div>
-            <div class="col-xl-6 order-xl-1">
+            <div class="col-xl-8 order-xl-1">
                 <div class="card">
                     <div class="card-body">
-                        <form action="{{route('users.update', $user->username)}}" method="POST">
+                        <form action="{{route('users.update', $user->id)}}" method="POST">
                             @csrf
                             <input type="hidden" value="PUT" name="_method">
                             <h6 class="heading-small text-muted mb-4">User information</h6>
@@ -153,8 +141,8 @@
                                         <div class="form-group">
                                             <label class="form-control-label" for="input-username">Username</label>
                                             <input type="text" id="input-username" name="username" class="form-control"
-                                                placeholder="email" value="{{$user->username}}"> 
-                                                @error('email')
+                                                placeholder="username" value="{{$user->username}}"> 
+                                                @error('username')
                                                     <span class="text-danger"><small><b><i>{{$message}}</i></b></small> </span>
                                                 @enderror
                                         </div>

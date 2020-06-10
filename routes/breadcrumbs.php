@@ -20,6 +20,24 @@ Breadcrumbs::for('user_create', function ($trail) {
 // Home > User > Edit
 Breadcrumbs::for('user_edit', function ($trail, $user) {
     $trail->parent('user');
-    $trail->push($user->username, route('users.edit', $user->username));
+    $trail->push($user->username, route('users.show', $user->username));
+});
+
+// Home > Classroom
+Breadcrumbs::for('classroom', function ($trail) {
+    $trail->parent('home');
+    $trail->push('Kelas', route('classrooms.index'));
+});
+
+// Home > Classroom > Tambah
+Breadcrumbs::for('classroom_create', function ($trail) {
+    $trail->parent('classroom');
+    $trail->push('Tambah', route('classrooms.create'));
+});
+
+// Home > Classroom > Tambah
+Breadcrumbs::for('classroom_edit', function ($trail, $classroom) {
+    $trail->parent('classroom');
+    $trail->push($classroom->nama_kelas, route('classrooms.show', $classroom->token));
 });
 

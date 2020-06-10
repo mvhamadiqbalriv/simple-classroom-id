@@ -41,6 +41,12 @@
                                     <span class="nav-link-text">User</span>
                                 </a>
                             </li>
+                            <li class="nav-item">
+                                <a class="nav-link {{ request()->is('classrooms*') ? 'active' : '' }}" href="{{route('classrooms.index')}} ">
+                                    <i class="ni ni-hat-3 text-primary"></i>
+                                    <span class="nav-link-text">Kelas</span>
+                                </a>
+                            </li>
                         </ul>
                     </div>
                 </div>
@@ -52,7 +58,7 @@
                 <div class="container-fluid">
                     <div class="collapse navbar-collapse" id="navbarSupportedContent">
                         <!-- Search form -->
-                        <form class="navbar-search navbar-search-light form-inline mr-sm-3" id="navbar-search-main">
+                        {{-- <form class="navbar-search navbar-search-light form-inline mr-sm-3" id="navbar-search-main">
                             <div class="form-group mb-0">
                                 <div class="input-group input-group-alternative input-group-merge">
                                     <div class="input-group-prepend">
@@ -65,7 +71,7 @@
                                 aria-label="Close">
                                 <span aria-hidden="true">×</span>
                             </button>
-                        </form>
+                        </form> --}}
                         <!-- Navbar links -->
                         <ul class="navbar-nav align-items-center  ml-md-auto ">
                             <li class="nav-item d-xl-none">

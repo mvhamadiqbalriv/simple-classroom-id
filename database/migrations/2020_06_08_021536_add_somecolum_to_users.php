@@ -14,9 +14,10 @@ class AddSomecolumToUsers extends Migration
     public function up()
     {
         Schema::table('users', function (Blueprint $table) {
-            $table->string("roles"); 
-            $table->text("address"); $table->string("phone"); 
-            $table->string("avatar");
+            $table->enum("roles", ["Admin", "User"])->default("User");
+            $table->text("address")->nullable(); 
+            $table->string("phone")->nullable(); 
+            $table->string("avatar")->default("avatars/default.png");
             $table->enum("status", ["ACTIVE", "INACTIVE"]);
         });
     }

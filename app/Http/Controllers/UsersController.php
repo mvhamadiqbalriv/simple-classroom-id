@@ -106,12 +106,12 @@ class UsersController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $user = \App\User::where('username', '=', $id)->first();
+        $user = \App\User::findOrFail($id);
 
         if ($request->has('updateInformation')) {
             $request->validate([
                 'name' => 'required|regex:/^[\pL\s\-]+$/u|max:50',
-                'email' => 'required|unique:App\User,email,'.$user->id,
+                'email' => 'required|unique:App\User,email,'.$id,
                 'roles' => 'required',
                 'phone' => ['regex:/\+?([-]?\d+)+|\(\d+\)([-]\d+)/'],
                 'address' => 'max:255'
@@ -124,13 +124,12 @@ class UsersController extends Controller
             $user->address = $request->get('address');
     
             $user->save();
-            return redirect()->route('users.edit', $id)->with('success', 'Data berhasil diubah');
-        }elseif ($request->has('updatePassword')) {
-            
-            $user = \App\User::where('username', '=', $id)->first();
+            return redirect()->route('users.edit', $user->username)->with('success', 'Data berhasil diubah');
+        }elseif ($request->has('updatePassword')) { 
             
             if (!Hash::check($request->get('old_password'), $user->password)) {
-                return redirect()->route('users.edit', $id)->with('notMatch', 'Password doesnt match with current/old password ');
+                return redirect()->route('users.edit', $user->username)->with('notMatch', 'Password doesnt match with
+                current/old password ');
                 die;
             }
             
@@ -140,13 +139,12 @@ class UsersController extends Controller
             ]);
 
             $user->update(['password'=> Hash::make($request->new_password)]);
-            return redirect()->route('users.edit', $id)->with('successChangePassword', 'Password berhasil diubah');
+            return redirect()->route('users.edit', $user->username)->with('successChangePassword', 'Password berhasil
+            diubah');
         }elseif ($request->has('avatar')) {
             $request->validate([
                 'avatar' => 'mimes:jpeg,png,gif,webp,jpg|max:2048'
             ]);
-
-            $user = \App\User::where('username', '=', $id)->first();
 
             if ($user->avatar && file_exists(storage_path('app/public/' . $user->avatar))) {
                 \Storage::delete('public/' . $user->avatar);
@@ -154,7 +152,8 @@ class UsersController extends Controller
                 $user->avatar = $file;
             }
             $user->save();
-            return redirect()->route('users.edit', $id)->with('successChangeAvatar', 'Avatar berhasil diubah');
+            return redirect()->route('users.edit', $user->username)->with('successChangeAvatar', 'Avatar berhasil
+            diubah');
         }
     }
 
@@ -166,7 +165,7 @@ class UsersController extends Controller
      */
     public function destroy($id)
     {
-        $user = \App\User::where('username', '=', $id)->first();
+        $user = \App\User::findOrFail($id);
         $user->delete();
         return redirect()->route('users.index')->with('success', 'Data berhasil dihapus');
     }

@@ -52,12 +52,10 @@
                                         <span class="input-group-text"><i class="ni ni-email-83"></i></span>
                                     </div>
                                     <input id="email" type="email" placeholder="Email" class="form-control @error('email') is-invalid @enderror" name="email" value="{{ old('email') }}" required autocomplete="email" autofocus>
-                                    @error('email')
-                                    <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $message }}</strong>
-                                    </span>
-                                    @enderror
                                 </div>
+                                @error('email')
+                                    <span class="text-danger"><small><b><i>{{$message}}</i></b></small> </span>
+                                @enderror
                             </div>
                             <div class="form-group">
                                 <div class="input-group input-group-merge input-group-alternative">
@@ -65,13 +63,10 @@
                                         <span class="input-group-text"><i class="ni ni-lock-circle-open"></i></span>
                                     </div>
                                     <input id="password" placeholder="Password" type="password" class="form-control @error('password') is-invalid @enderror" name="password" required autocomplete="current-password">
-                                    
-                                    @error('password')
-                                    <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $message }}</strong>
-                                    </span>
-                                    @enderror
                                 </div>
+                                @error('password')
+                                    <span class="text-danger"><small><b><i>{{$message}}</i></b></small> </span>
+                                @enderror
                             </div>
                             <!--TODO-->
                             {{-- <div class="custom-control custom-control-alternative custom-checkbox">

@@ -53,12 +53,10 @@
                                     <input id="name" type="text" placeholder="Name"
                                         class="form-control @error('name') is-invalid @enderror" name="name"
                                         value="{{ old('name') }}" required autocomplete="name" autofocus>
+                                    </div>
                                     @error('name')
-                                    <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $message }}</strong>
-                                    </span>
+                                     <span class="text-danger"><small><b><i>{{$message}}</i></b></small> </span>
                                     @enderror
-                                </div>
                             </div>
                             <div class="form-group mb-3">
                                 <div class="input-group input-group-merge input-group-alternative">
@@ -68,12 +66,10 @@
                                     <input id="name" type="text" placeholder="Username"
                                         class="form-control @error('username') is-invalid @enderror" name="username"
                                         value="{{ old('username') }}" required autocomplete="username" autofocus>
+                                    </div>
                                     @error('username')
-                                    <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $message }}</strong>
-                                    </span>
+                                     <span class="text-danger"><small><b><i>{{$message}}</i></b></small> </span>
                                     @enderror
-                                </div>
                             </div>
                             <div class="form-group mb-3">
                                 <div class="input-group input-group-merge input-group-alternative">
@@ -83,12 +79,10 @@
                                     <input id="email" type="email" placeholder="Email"
                                         class="form-control @error('email') is-invalid @enderror" name="email"
                                         value="{{ old('email') }}" required autocomplete="email" autofocus>
+                                    </div>
                                     @error('email')
-                                    <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $message }}</strong>
-                                    </span>
+                                     <span class="text-danger"><small><b><i>{{$message}}</i></b></small> </span>
                                     @enderror
-                                </div>
                             </div>
                             <div class="form-group">
                                 <div class="input-group input-group-merge input-group-alternative">
@@ -98,13 +92,10 @@
                                     <input id="password" placeholder="Password" type="password"
                                         class="form-control @error('password') is-invalid @enderror" name="password"
                                         required autocomplete="current-password">
-
+                                    </div>
                                     @error('password')
-                                    <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $message }}</strong>
-                                    </span>
+                                     <span class="text-danger"><small><b><i>{{$message}}</i></b></small> </span>
                                     @enderror
-                                </div>
                             </div>
                             <div class="form-group">
                                 <div class="input-group input-group-merge input-group-alternative">
@@ -114,13 +105,10 @@
                                     <input id="password_confirmation" placeholder="Password Confirmation" type="password"
                                         class="form-control @error('password_confirmation') is-invalid @enderror" name="password_confirmation"
                                         required autocomplete="current-password">
-
+                                    </div>
                                     @error('password_confirmation')
-                                    <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $message }}</strong>
-                                    </span>
+                                     <span class="text-danger"><small><b><i>{{$message}}</i></b></small> </span>
                                     @enderror
-                                </div>
                             </div>
                             <!--TODO-->
                             {{-- <div class="custom-control custom-control-alternative custom-checkbox">
