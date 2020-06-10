@@ -1,6 +1,44 @@
 @extends('layouts.back')
 @section('add_data')
-    <a href="{{route('classrooms.create')}} " class="btn btn-sm btn-neutral">Tambah Kelas</a>
+    <a href="{{route('classrooms.create')}} " class="btn btn-sm btn-neutral">Buat Kelas</a>
+    <a href="#" data-toggle="modal" data-target="#ikutiKelas" class="btn btn-sm btn-neutral">Ikuti Kelas</a>
+    <div class="modal fade" id="ikutiKelas" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Masukan Token</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form action="{{route('classrooms.create_participant')}}" method="POST">
+                        @csrf
+                        <div class="form-group">
+                            <div class="input-group input-group-merge input-group-alternative mb-3">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text"><i class="ni ni-key-25"></i></span>
+                                </div>
+                                <input class="form-control" name="token" type="search" value="{{old('token', null)}}"
+                                placeholder="Token">
+                            </div>
+                            @error('token')
+                            <span class="text-danger"><small><b><i>{{$message}}</i></b></small> </span>
+                            @enderror
+                            @if (session('msgParticipant'))
+                                <span class="text-danger"><small><b><i>{{session('msgParticipant')}}</i></b></small> </span>
+                            @endif
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                            <button type="submit" class="btn btn-primary">Save changes</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
 @endsection
 @section('title')
     Kelas
@@ -39,7 +77,7 @@
             <div class="card-body">
                 <div class="row">
                     <div class="col">
-                        <span class="h2 font-weight-bold mb-0">{{$item->nama_kelas}} </span>
+                        <span class="h2 font-weight-bold mb-0"><a style="color:black" href="{{route('classrooms.show', $item->token)}} ">{{$item->nama_kelas}}</a>  </span>
                         <h5 class="card-title text-uppercase text-muted mb-0">{{$item->bidang_ilmu}} </h5>
                     </div>
                     <div class="col-auto">
@@ -60,11 +98,21 @@
                     </div>
                 </div>
                 <p class="mt-5 mb-0 text-sm">
-                            <span class="text-nowrap">{{$item->user->name}}</span>
+                    <span class="text-nowrap">{{$item->user->name}}</span>
                 </p>
             </div>
         </div>
     </div>
     @endforeach
 </div>
+@endsection
+@section('js')
+@if (session('msgParticipant') || $errors->has('token') )
+<script>
+    $(function() {
+            $('#ikutiKelas').modal('show');
+        });
+</script>
+@endif
+
 @endsection

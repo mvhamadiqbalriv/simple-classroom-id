@@ -15,7 +15,7 @@
                 <div class="card-body px-lg-5 py-lg-5">
                     @if(session('status')) <div class="alert alert-success text-center">{{session('status')}} </div>
                     @endif
-                    <form role="form" action="{{route('classrooms.store')}}" method="POST" enctype="multipart/form-data">
+                    <form role="form" action="{{route('classrooms.store')}}" method="POST">
                         @csrf
                         <div class="form-group">
                             <div class="input-group input-group-merge input-group-alternative mb-3">

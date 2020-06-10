@@ -46,7 +46,7 @@ Ubah User
                 <form action="{{route('classrooms.update', $classroom->id)}}" method="POST">
                     @csrf
                     <input type="hidden" value="PUT" name="_method">
-                    <h6 class="heading-small text-muted mb-4">Kelas information</h6>
+                    <h6 class="heading-small text-muted mb-4">Kelas information | <i>Token : <strong>{{$classroom->token}} </strong></i></h6>
                     <div class="pl-lg-4">
                         @if(session('success')) <div class="alert alert-success alert-dismissible fade show text-center"
                             role="alert">
@@ -99,20 +99,4 @@ Ubah User
             </div>
     </div>
 </div>
-@endsection
-@section('js')
-@if (session('notMatch') || $errors->has('new_password') || $errors->has('conf_password') ||
-session('successChangePassword'))
-<script>
-    $(function() {
-            $('#ubahpassword').modal('show');
-        });
-</script>
-@endif
-<script>
-    $("#imageClick").click(function() {
-            $("input[id='avatar']").click();
-        });
-</script>
-
 @endsection

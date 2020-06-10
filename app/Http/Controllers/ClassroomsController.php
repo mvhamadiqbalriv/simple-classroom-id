@@ -123,4 +123,31 @@ class ClassroomsController extends Controller
         $user->delete();
         return redirect()->route('classrooms.index')->with('success', 'Data berhasil dihapus');
     }
+
+    public function create_participant(Request $request){
+
+        $request->validate(['token' => 'required']);
+
+        $classroom = \App\Classroom::where('token', '=', $request->token)->first();
+
+        if (!$classroom) {
+            return redirect()->route('classrooms.index')->with('msgParticipant', 'Token anda yang masukan
+            belum terdaftar');
+        }else {
+            $participant = \App\Participant::where(['user_id' => Auth::user()->id, 'classroom_id' => $classroom->id])->first();
+            if (!$participant) {
+                $new_participant = new \App\Participant;
+
+                $new_participant->user_id = Auth::user()->id;
+                $new_participant->classroom_id = $classroom->id;
+
+                $new_participant->save();
+                return redirect()->route('classrooms.index')->with('msgParticipant', 'Kelas berhasil ditambahkan');
+            }else{
+                return redirect()->route('classrooms.index')->with('msgParticipant', 'Data berhasil dihapus');
+            }
+        }
+
+    }
+
 }

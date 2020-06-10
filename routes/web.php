@@ -23,3 +23,7 @@ Route::get('/home', 'HomeController@index')->name('home');
 
 Route::resource('users', 'UsersController');
 Route::resource('classrooms', 'ClassroomsController');
+
+Route::post('classrooms', 'ClassroomsController@create_participant')->name('classrooms.create_participant');
+Route::post('classrooms/create', 'ClassroomsController@store')->name('classrooms.store');
+
