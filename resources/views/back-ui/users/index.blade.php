@@ -1,7 +1,9 @@
 @extends('layouts.back')
+@if (Auth::user()->roles == 'Admin')   
 @section('add_data')
     <a href="{{route('users.create')}} " class="btn btn-sm btn-neutral">Tambah User</a>
 @endsection
+@endif
 @section('title')
     List Users
 @endsection
@@ -74,6 +76,7 @@
                                             <span class="status">{{$user->roles}} </span>
                                         </span>
                                     </td>
+                                    @if (Auth::user()->roles == 'Admin')
                                     <td class="text-right">
                                         <div class="dropdown">
                                             <a class="btn btn-sm btn-icon-only text-light" href="#" role="button"
@@ -90,6 +93,7 @@
                                             </div>
                                         </div>
                                     </td>
+                                    @endif
                                 </tr>
                                 @endforeach
                             </tbody>

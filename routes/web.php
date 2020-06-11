@@ -26,4 +26,14 @@ Route::resource('classrooms', 'ClassroomsController');
 
 Route::post('classrooms', 'ClassroomsController@create_participant')->name('classrooms.create_participant');
 Route::post('classrooms/create', 'ClassroomsController@store')->name('classrooms.store');
+Route::post('classrooms/{classroom}', 'ClassroomsController@theories')->name('classrooms.theories');
+
+Route::middleware(['auth'])->group(function () {
+    Route::resource('users', 'UsersController');
+    Route::resource('classrooms', 'ClassroomsController');
+
+    Route::post('classrooms', 'ClassroomsController@create_participant')->name('classrooms.create_participant');
+    Route::post('classrooms/create', 'ClassroomsController@store')->name('classrooms.store');
+    Route::post('classrooms/{classroom}', 'ClassroomsController@theories')->name('classrooms.theories');
+});
 

@@ -16,4 +16,8 @@ class Classroom extends Model
     public function participant(){
         return $this->hasMany('App\Participant');
     }
+
+    public function theory(){
+        return $this->hasMany('App\Theory');
+    }
 }

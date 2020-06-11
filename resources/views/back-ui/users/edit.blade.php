@@ -49,14 +49,17 @@
                                 <i class="ni location_pin mr-2"></i>{{$user->address}}
                             </div>
                             <br>
+                            @if (Auth::user()->roles == 'Admin' || Auth::user()->id == $user->id)  
                             <button type="button" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#ubahpassword">
                                 Ubah password
                             </button>
+                            @endif
                         </div>
                     </div>
                 </div>
             </div>
             <!-- Modal -->
+            @if (Auth::user()->roles == 'Admin' || Auth::user()->id == $user->id)
             <div class="modal fade" id="ubahpassword" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
                 aria-hidden="true">
                 <div class="modal-dialog" role="document">
@@ -68,6 +71,12 @@
                             </button>
                         </div>
                         <div class="modal-body">
+                            @if(session('successChangePassword')) <div class="alert alert-success alert-dismissible fade show text-center" role="alert">
+                                <span class="alert-icon"><i class="ni ni-like-2"></i></span> {{session('successChangePassword')}} 
+                                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>@endif
                             <form action="{{route('users.update',$user->id)}} " method="post">
                             @csrf
                             <input type="hidden" value="PUT" name="_method">
@@ -112,7 +121,7 @@
                         </div>
                     </div>
                 </div>
-            </div>
+            </div>  
             <div class="col-xl-8 order-xl-1">
                 <div class="card">
                     <div class="card-body">
@@ -171,6 +180,7 @@
                                     </div>
                                 </div>
                                 <div class="row">
+                                    @if (Auth::user()->roles == 'Admin')
                                     <div class="col-lg-6">
                                         <div class="form-group">
                                             <label class="form-control-label" for="input-first-roles">Roles</label>
@@ -191,6 +201,7 @@
                                             @enderror
                                         </div>
                                     </div>
+                                    @endif
                                     <div class="col-lg-6">
                                         <div class="form-group">
                                             <label class="form-control-label">Address</label>
@@ -209,6 +220,7 @@
                     </div>
                 </div>
             </div>
+            @endif
         </div>
 @endsection
 @section('js')
@@ -219,10 +231,13 @@
         });
         </script>
     @endif
+
+    @if (Auth::user()->roles == 'Admin' || Auth::user()->id == $user->id)
     <script>
         $("#imageClick").click(function() {
             $("input[id='avatar']").click();
         });
     </script> 
+    @endif
     
 @endsection

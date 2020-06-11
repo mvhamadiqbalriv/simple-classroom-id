@@ -5,9 +5,12 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Auth;
+
 
 class UsersController extends Controller
 {
+
     /**
      * Display a listing of the resource.
      *
@@ -31,6 +34,9 @@ class UsersController extends Controller
      */
     public function create()
     {
+        if (Auth::user()->roles != 'Admin') {
+            abort(404);die;
+        }
         return view('back-ui.users.create');
     }
 
@@ -83,7 +89,9 @@ class UsersController extends Controller
     public function show($id)
     {
         $user = \App\User::where('username', '=', $id)->first();
-
+        if (!$user) {
+            abort(404);die;
+        }
         return view('back-ui.users.edit', ['user' => $user]);
     }
 
@@ -114,7 +122,7 @@ class UsersController extends Controller
         if ($request->has('updateInformation')) {
             $request->validate([
                 'name' => 'required|regex:/^[\pL\s\-]+$/u|max:50',
-                'username' => 'required|alpha_dash|unique:App\User,username|max:8|min:3',
+                'username' => 'required|alpha_dash|max:8|min:3|unique:App\User,username,'.$id,
                 'email' => 'required|unique:App\User,email,'.$id,
                 'roles' => 'required',
                 'phone' => ['regex:/\+?([-]?\d+)+|\(\d+\)([-]\d+)/'],
@@ -128,7 +136,7 @@ class UsersController extends Controller
             $user->phone = $request->get('phone');
             $user->address = $request->get('address');
     
-            $user->save();
+            $user->update();
             return redirect()->route('users.show', $user->username)->with('success', 'Data berhasil diubah');die;
         }elseif ($request->has('updatePassword')) { 
             
@@ -170,7 +178,12 @@ class UsersController extends Controller
      */
     public function destroy($id)
     {
-        $user = \App\User::findOrFail($id);
+        $user = \App\User::where('username', '=', $id)->first();
+        if ($user->avatar && file_exists(storage_path('app/public/' . $user->avatar))) {
+            if ($user->avatar != 'avatars/default.png') {
+                \Storage::delete('public/' . $user->avatar);
+            }
+        }
         $user->delete();
         return redirect()->route('users.index')->with('success', 'Data berhasil dihapus');
     }

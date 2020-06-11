@@ -101,6 +101,7 @@
                                 <form onsubmit="return confirm('Apakah anda yakin akan keluar dari kelas ini?')" class="d-inline"
                                     action="{{route('classrooms.update', Auth::user()->id)}}" method="POST"> @csrf
                                     <input type="hidden" name="_method" value="PUT">
+                                    <input type="hidden" name="classroom_id" value="{{$item->id}} ">
                                     <input type="submit" name="keluarKelas" value="Keluar" class="dropdown-item">
                                 </form>
                                 @endif

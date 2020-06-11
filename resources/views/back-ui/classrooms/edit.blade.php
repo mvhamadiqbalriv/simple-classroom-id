@@ -19,14 +19,14 @@
         </style>
 @endsection
 @section('title')
-Kelas
+{{$classroom->nama_kelas}}
 @endsection
 @section('breadcrumb')
 {{ Breadcrumbs::render('classroom_edit', $classroom) }}
 @endsection
 @section('content')
 <div class="row justify-content-md-center">
-    <div class="col-xl-4">
+    <div class="col-xl-5">
         @if(session('successChangeAvatar')) <div
             class="alert alert-success alert-dismissible fade show text-center ava-change" role="alert">
             <span class="alert-icon"><i class="ni ni-like-2"></i></span> {{session('successChangeAvatar')}}
@@ -51,16 +51,21 @@ Kelas
                         </div>
                     </div>
                 </div>
-                <div class="text-center">
-                    <p class="h5">
+                <div class="text-left">
+                    <p class="h4">
                         {{$classroom->deskripsi}}
                     </p>
+                </div>
+                <br>
+                <div class="text-left">
+                    <p class="h5">Token : <i><strong>{{$classroom->token}}</strong> </i> </p>
+                    <p class="h5">Pembuat : <i><strong>{{$classroom->user->name}}</strong> </i> </p>
                 </div>
             </div>
         </div>
     </div>
     @if (Auth::user()->roles == 'Admin' || Auth::user()->id == $classroom->user_id)
-    <div class="col-xl-6">
+    <div class="col-xl-5">
         <div class="card">
             <div class="card-body">
                 <form action="{{route('classrooms.update', $classroom->id)}}" method="POST">
@@ -109,13 +114,16 @@ Kelas
                                 </div>
                             </div>
                         </div>
+                        <div class="text-left">
+                            <button type="submit" name="updateInformation" class="btn btn-primary mt-4">Edit User</button>
+                        </div>
                         </div>
                     </div>
                 </form>
             </div>
     </div>
     @endif
-            <div class="col-xl-4">
+            <div class="col-xl-5">
                 <div class="card">
                     <div class="card-header border-0">
                         <div class="row align-items-center">
@@ -170,6 +178,22 @@ Kelas
                             @endif
                         </div>
                     </div>
+                    @if (session('msgKeluarkanS'))
+                    <div class="alert alert-success alert-dismissible fade show text-center ava-change" role="alert">
+                        <span class="alert-icon"><i class="ni ni-like-02"></i></span> {{(session('msgKeluarkanS'))}}
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    @endif
+                    @if (session('msgKeluarkanE'))
+                    <div class="alert alert-danger alert-dismissible fade show text-center ava-change" role="alert">
+                        <span class="alert-icon"><i class="ni ni-sound-wave"></i></span> {{(session('msgKeluarkanE'))}}
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    @endif
                     <div class="table-responsive">
                         <!-- Projects table -->
                         <table class="table table-fixed">
@@ -182,8 +206,8 @@ Kelas
                                                 <img alt="Image placeholder" src="{{asset('storage/'.$item->user->avatar)}} " width="36" height="36"
                                                 style="object-fit: cover">
                                             </span>
-                                            <div class="media-body  ml-2  d-none d-lg-block">
-                                                <span class="mb-0 text-sm  font-weight-bold">{{$item->user->name}} </span>
+                                            <div class="media-body  ml-2 ">
+                                                <span class="mb-0 text-sm  font-weight-bold"><a href="{{route('users.show', $item->user->username)}} " style="color:black">{{$item->user->name}}</a>  </span>
                                             </div>
                                         </div>
                                     </td>
@@ -214,129 +238,213 @@ Kelas
                     </div>
                 </div>
             </div>
-            <div class="col-xl-6">
+            <div class="col-xl-5">
                 <div class="card">
                     <div class="card-header border-0">
                         <div class="row align-items-center">
                             <div class="col">
                                 <h3 class="mb-0">Materi Kelas</h3>
                             </div>
+                            @if (Auth::user()->roles == 'Admin' || Auth::user()->id == $classroom->user_id)
                             <div class="col text-right">
-                                <a href="#!" class="btn btn-sm btn-primary">See all</a>
+                                <a href="#" class="btn btn-sm btn-primary" data-toggle="modal" data-target="#tambahMateri"><i class="fa fa-plus text-white"  aria-hidden="true"></i>&nbsp; Materi</a>
+                                <div class="modal fade" id="tambahMateri" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+                                        aria-hidden="true">
+                                        <div class="modal-dialog" role="document">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h5 class="modal-title" id="exampleModalLabel">Tambah Materi</h5>
+                                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                        <span aria-hidden="true">&times;</span>
+                                                    </button>
+                                                </div>
+                                                <div class="modal-body">
+                                                @if(session('msgMateriS')) <div class="alert alert-success alert-dismissible fade show text-center" role="alert">
+                                                    <span class="alert-icon"><i class="ni ni-like-2"></i></span> {{session('msgMateriS')}} 
+                                                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                                            <span aria-hidden="true">&times;</span>
+                                                    </button>
+                                                </div>@endif
+                                                    <form action="{{route('classrooms.theories', $classroom->token)}}" method="POST" enctype="multipart/form-data">
+                                                        @csrf
+                                                        <input type="hidden" name="classroom_id" value="{{$classroom->id}} ">
+                                                        <div class="form-group">
+                                                            <div class="input-group input-group-merge input-group-alternative mb-3">
+                                                                <div class="input-group-prepend">
+                                                                    <span class="input-group-text"><i class="ni ni-tag"></i></span>
+                                                                </div>
+                                                                <input class="form-control" name="judul_materi" type="search" value="{{old('judul', null)}}"
+                                                                    placeholder="Judul Materi">
+                                                            </div>
+                                                            @error('judul_materi')
+                                                            <span class="text-danger"><small><b><i>{{$message}}</i></b></small> </span>
+                                                            @enderror
+                                                        </div>
+                                                        <div class="form-group">
+                                                            <div class="input-group input-group-merge input-group-alternative mb-3">
+                                                                <div class="input-group-prepend">
+                                                                    <span class="input-group-text"><i class="ni ni-align-left-2"></i></span>
+                                                                </div>
+                                                                <textarea name="deskripsi_materi" class="form-control" id="" cols="30" rows="10">{{old('judul', 'Deskripsi')}}</textarea>
+                                                            </div>
+                                                            @error('deskripsi_materi')
+                                                            <span class="text-danger"><small><b><i>{{$message}}</i></b></small> </span>
+                                                            @enderror
+                                                        </div>
+                                                        <div class="form-group">
+                                                            <div class="input-group input-group-merge input-group-alternative mb-3">
+                                                                <div class="input-group-prepend">
+                                                                    <span class="input-group-text"><i class="ni ni-spaceship"></i></span>
+                                                                </div>
+                                                                <input type="file" name="file_materi" class="form-control" id="">
+                                                            </div>
+                                                            @error('file_materi')
+                                                            <span class="text-danger"><small><b><i>{{$message}}</i></b></small> </span>
+                                                            @enderror
+                                                        </div>
+                                                        <div class="modal-footer">
+                                                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                                            <button type="submit" name="tambahMateri" class="btn btn-primary">Save changes</button>
+                                                        </div>
+                                                    </form>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                            </div>
+                            @endif
+                            </div>
+                    </div>
+                    <div class="modal fade" id="detailMateri" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle"
+                        aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-centered" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="exampleModalLongTitle"></h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <div class="modal-body">
+                                    <p class="h4" id="modalDeskripsi"></p>
+                                    <br><i class="fa fa-file"></i>
+                                    <a href="#" class="h5 mt-5" id="modalFile">  Tidak ada file</a>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal fade" id="ubahMateri" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+                        aria-hidden="true">
+                        <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="exampleModalLabel">Ubah Materi</h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <div class="modal-body">
+                                @if(session('msgMateriSU')) <div class="alert alert-success alert-dismissible fade show text-center" role="alert">
+                                    <span class="alert-icon"><i class="ni ni-like-2"></i></span> {{session('msgMateriSU')}} 
+                                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>@endif
+                                    <form action="{{route('classrooms.update', $classroom->token)}}" method="POST" enctype="multipart/form-data">
+                                        @csrf
+                                        <input type="hidden" name="_method" value="PUT">
+                                        <input type="hidden" name="theory_id" id="theory_id">
+                                        <div class="form-group">
+                                            <div class="input-group input-group-merge input-group-alternative mb-3">
+                                                <div class="input-group-prepend">
+                                                    <span class="input-group-text"><i class="ni ni-tag"></i></span>
+                                                </div>
+                                                <input class="form-control" name="judul_materi_ubah" id="judul_materi" type="search" value="{{old('judul', null)}}"
+                                                    placeholder="Judul Materi">
+                                            </div>
+                                            @error('judul_materi_ubah')
+                                            <span class="text-danger"><small><b><i>{{$message}}</i></b></small> </span>
+                                            @enderror
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="input-group input-group-merge input-group-alternative mb-3">
+                                                <div class="input-group-prepend">
+                                                    <span class="input-group-text"><i class="ni ni-align-left-2"></i></span>
+                                                </div>
+                                                <textarea name="deskripsi_materi_ubah" id="deskripsi_materi" class="form-control" id="" cols="30" rows="10">{{old('judul', 'Deskripsi')}}</textarea>
+                                            </div>
+                                            @error('deskripsi_materi_ubah')
+                                            <span class="text-danger"><small><b><i>{{$message}}</i></b></small> </span>
+                                            @enderror
+                                        </div>
+                                        <div class="form-group">
+                                            Current File : <a href="#" id="modalFileName"> Tidak ada file</a>
+                                            <br>
+                                            <br>
+                                            <div class="input-group input-group-merge input-group-alternative mb-3">
+                                                <div class="input-group-prepend">
+                                                    <span class="input-group-text"><i class="ni ni-spaceship"></i></span>
+                                                </div>
+                                                <input type="file" name="file_materi_ubah" id="file_materi" class="form-control" id="">
+                                            </div>
+                                            @error('file_materi_ubah')
+                                            <span class="text-danger"><small><b><i>{{$message}}</i></b></small> </span>
+                                            @enderror
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                            <button type="submit" name="ubahMateri" class="btn btn-primary">Save changes</button>
+                                        </div>
+                                    </form>
+                                </div>
                             </div>
                         </div>
                     </div>
                     <div class="table-responsive">
                         <!-- Projects table -->
-                        <table class="table align-items-center table-flush">
-                            <thead class="thead-light">
-                                <tr>
-                                    <th scope="col">Referral</th>
-                                    <th scope="col">Visitors</th>
-                                    <th scope="col"></th>
-                                </tr>
-                            </thead>
+                        <table class="table table-fixed">
                             <tbody>
+                                @if ($theory->isEmpty())
                                 <tr>
-                                    <td scope="row">
-                                        Facebook
-                                    </td>
+                                    <td>{{'Data belum tersedia'}}</td>
+                                    
+                                </tr>
+                                @endif
+                                @foreach ($theory as $item)
+                                <tr>
                                     <td>
-                                        1,480
-                                    </td>
-                                    <td>
-                                        <div class="d-flex align-items-center">
-                                            <span class="mr-2">60%</span>
-                                            <div>
-                                                <div class="progress">
-                                                    <div class="progress-bar bg-gradient-danger" role="progressbar"
-                                                        aria-valuenow="60" aria-valuemin="0" aria-valuemax="100"
-                                                        style="width: 60%;"></div>
-                                                </div>
+                                        <div class="media align-items-center">
+                                            <div class="media-body ml-2">
+                                                <span class="mb-0 text-sm  font-weight-bold"><a href="#!"  class="lihatMateri" id="{{$item->id}}" style="color: black">{{$item->judul}}</a>  </span>
                                             </div>
                                         </div>
                                     </td>
-                                </tr>
-                                <tr>
-                                    <td scope="row">
-                                        Facebook
-                                    </td>
                                     <td>
-                                        5,480
-                                    </td>
-                                    <td>
-                                        <div class="d-flex align-items-center">
-                                            <span class="mr-2">70%</span>
-                                            <div>
-                                                <div class="progress">
-                                                    <div class="progress-bar bg-gradient-success" role="progressbar"
-                                                        aria-valuenow="70" aria-valuemin="0" aria-valuemax="100"
-                                                        style="width: 70%;"></div>
-                                                </div>
-                                            </div>
+                                    @if (Auth::user()->roles == 'Admin' || Auth::user()->id == $classroom->user_id)
+                                    <div class="dropdown">
+                                        <a class="btn btn-sm btn-icon-only text-light" href="#" role="button"
+                                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                            <i class="fas fa-ellipsis-v"></i>
+                                        </a>
+                                        <div class="dropdown-menu dropdown-menu-right dropdown-menu-arrow">
+                                            <a class="dropdown-item ubahMateri" href="#" data-toggle="modal" data-target="#ubahMateri" id="{{$item->id}}" class="btn btn-primary btn-sm">Edit</a>
+                                            <form onsubmit="return confirm('Apakah anda yakin menghapus materi ini?')" class="d-inline"
+                                                action="{{route('classrooms.theories', $classroom->token)}} " method="POST"> 
+                                                @csrf
+                                                <input type="hidden" name="theory_id" value="{{$item->id}}">
+                                                <input type="hidden" name="user_id" value="{{$item->user->id}}">
+                                                <input type="hidden" name="classroom_id" value="{{$classroom->id}}">
+                                                <input type="submit" name="hapusMateri" value="Hapus" class="dropdown-item">
+                                            </form>
                                         </div>
+                                    </div>
+                                    @endif
                                     </td>
                                 </tr>
-                                <tr>
-                                    <td scope="row">
-                                        Google
-                                    </td>
-                                    <td>
-                                        4,807
-                                    </td>
-                                    <td>
-                                        <div class="d-flex align-items-center">
-                                            <span class="mr-2">80%</span>
-                                            <div>
-                                                <div class="progress">
-                                                    <div class="progress-bar bg-gradient-primary" role="progressbar"
-                                                        aria-valuenow="80" aria-valuemin="0" aria-valuemax="100"
-                                                        style="width: 80%;"></div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td scope="row">
-                                        Instagram
-                                    </td>
-                                    <td>
-                                        3,678
-                                    </td>
-                                    <td>
-                                        <div class="d-flex align-items-center">
-                                            <span class="mr-2">75%</span>
-                                            <div>
-                                                <div class="progress">
-                                                    <div class="progress-bar bg-gradient-info" role="progressbar"
-                                                        aria-valuenow="75" aria-valuemin="0" aria-valuemax="100"
-                                                        style="width: 75%;"></div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td scope="row">
-                                        twitter
-                                    </td>
-                                    <td>
-                                        2,645
-                                    </td>
-                                    <td>
-                                        <div class="d-flex align-items-center">
-                                            <span class="mr-2">30%</span>
-                                            <div>
-                                                <div class="progress">
-                                                    <div class="progress-bar bg-gradient-warning" role="progressbar"
-                                                        aria-valuenow="30" aria-valuemin="0" aria-valuemax="100"
-                                                        style="width: 30%;"></div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </td>
-                                </tr>
+                                @endforeach
                             </tbody>
                         </table>
                     </div>
@@ -363,12 +471,93 @@ Kelas
         $(v).width(colWidth[i]);
         });
         }).resize(); // Trigger resize handler
+
+        $(document).ready(function () {
+            $('.lihatMateri').click(function(){
+                $('#detailMateri').modal('show');
+                $('#modalFile').attr("download", "")
+                var theory_id = $(this).attr("id");
+                var lihatMateri = true;
+
+                $.ajax({
+                    url : window.location.href ,
+                    method : 'POST',
+                    data : {
+                        "theory_id":theory_id, 
+                        "lihatMateri":lihatMateri,
+                        "_token": "{{ csrf_token() }}"},
+                    success : function(data){
+                        var result = JSON.parse(data);
+                        $('#exampleModalLongTitle').html(result.judul);
+                        $('#modalDeskripsi').html(result.deskripsi);
+                        if (result.file_name === null) {
+                            $('#modalFile').html("Tidak ada file");
+                            $('#modalFile').removeAttr('download');
+                            $('#modalFile').attr('href', '#');
+                            $('#modalFile').css('color', 'grey');
+                        }else{
+                            $('#modalFile').html(result.file_name);
+                            $('#modalFile').css('color', 'blue');
+                            $('#modalFile').attr('href', '{{asset("storage/")}}/'+result.file);   
+                        }
+                    }
+                })
+            })
+            $('.ubahMateri').click(function(){
+                $('#modalFileName').attr("download", "")
+                var theory_id = $(this).attr("id");
+                var ubahMateri = true;
+
+                $.ajax({
+                    url : window.location.href ,
+                    method : 'POST',
+                    data : {
+                        "theory_id":theory_id, 
+                        "ubahMateri":ubahMateri,
+                        "_token": "{{ csrf_token() }}"
+                     },
+                    success : function(data){
+                        var result = JSON.parse(data);
+                        $('#theory_id').val(result.id);
+                        $('#judul_materi').val(result.judul);
+                        $('#deskripsi_materi').html(result.deskripsi);
+                        if (result.file_name === null) {
+                            $('#modalFileName').html("Belum ada file");
+                            $('#modalFileName').removeAttr('download');
+                            $('#modalFileName').attr('href', '#');
+                            $('#modalFileName').css('color', 'grey');
+                        }else{
+                            $('#modalFileName').html(result.file_name);
+                            $('#modalFileName').css('color', 'blue');
+                            $('#modalFileName').attr('href', '{{asset("storage/")}}/'+result.file);   
+                        }
+                    }
+                })
+            })
+        })
+
     </script>
 
-    @if (session('msgParticipantE') || session('msgParticipantS') || $errors->has('token') )
+    @if (session('msgParticipantE') || session('msgParticipantS') || $errors->has('username') )
     <script>
         $(function() {
                 $('#undangPeserta').modal('show');
+            });
+    </script>
+    @endif
+
+    @if (session('msgMateriS') || $errors->has('judul_materi')  || $errors->has('deskripsi_materi') || $errors->has('file_materi'))
+    <script>
+        $(function() {
+                $('#tambahMateri').modal('show');
+            });
+    </script>
+    @endif
+
+    @if ($errors->has('judul_materi_ubah')  || $errors->has('deskripsi_materi_ubah') || $errors->has('file_materi_ubah'))
+    <script>
+        $(function() {
+                $('#ubahMateri').modal('show');
             });
     </script>
     @endif

@@ -8,6 +8,7 @@ use Illuminate\Support\Str;
 
 class ClassroomsController extends Controller
 {
+
     /**
      * Display a listing of the resource.
      *
@@ -16,15 +17,13 @@ class ClassroomsController extends Controller
     public function index(Request $request)
     {
 
-        if (Auth::user()->roles != 'Admin') {
-            $participant = \App\Participant::where([['user_id', '=', Auth::user()->id], ['status', '=', 'Ada']])->get();
-            $arrCSID = [];
-            foreach ($participant as $item) {
-                array_push($arrCSID, $item->classroom_id);
-            }
+        $participant = \App\Participant::where([['user_id', '=', Auth::user()->id], ['status', '=', 'Ada']])->get();
+        $arrCSID = [];
+        foreach ($participant as $item) {
+            array_push($arrCSID, $item->classroom_id);
         }
 
-        if (!$arrCSID && Auth::user()->roles == 'Admin') {
+        if (Auth::user()->roles == 'Admin') {
             $classrooms = \App\Classroom::latest()->paginate(6);
         }else{
             $classrooms = \App\Classroom::whereIn('id', $arrCSID)->latest()->paginate(6);
@@ -34,7 +33,7 @@ class ClassroomsController extends Controller
 
         
         if ($filterKeyword) {
-            if (!$arrCSID && Auth::user()->roles == 'Admin') {
+            if (Auth::user()->roles == 'Admin') {
                 $classrooms = \App\Classroom::where('nama_kelas', 'LIKE', "%$filterKeyword%")->latest()->paginate(5);
             }else{
                 $classrooms = \App\Classroom::whereIn('id', $arrCSID)->where('nama_kelas', 'LIKE',
@@ -100,8 +99,9 @@ class ClassroomsController extends Controller
         $classroom = \App\Classroom::where('token', '=', $id)->first();
 
         $participant = \App\Participant::where(['classroom_id' => $classroom->id, 'status' => 'Ada'])->get();
+        $theory = \App\Theory::where(['classroom_id' => $classroom->id])->get();
 
-        return view('back-ui.classrooms.edit', ['classroom' => $classroom , 'participant' => $participant]);
+        return view('back-ui.classrooms.edit', ['classroom' => $classroom , 'participant' => $participant, 'theory' => $theory]);
     }
 
     /**
@@ -143,7 +143,7 @@ class ClassroomsController extends Controller
             return redirect()->route('classrooms.show', $classroom->token)->with('success', 'Kelas berhasil diupdate');die;
         }elseif ($request->has('keluarKelas')) {
     
-            $participant = \App\Participant::findOrFail($id);
+            $participant = \App\Participant::where([['user_id', '=', $id],['classroom_id', '=', $request->classroom_id]])->first();
     
             $participant->status = "Keluar";
 
@@ -158,9 +158,9 @@ class ClassroomsController extends Controller
                 return redirect()->route('classrooms.show', $id)->with('msgParticipantE', 'Username anda yang masukan
                 belum terdaftar di aplikasi ini');
             }else {
-                $participant = \App\Participant::where(['user_id' => $user->id, 'classroom_id' => $id])->first();
+                $classroom = \App\Classroom::where('token', '=', $id)->first();
+                $participant = \App\Participant::where([['user_id', '=', $user->id], ['classroom_id', '=', $classroom->id]])->first();
                 if (!$participant) {
-                    $classroom = \App\Classroom::where('token', '=', $id)->first();
 
                     $new_participant = new \App\Participant;
 
@@ -169,15 +169,45 @@ class ClassroomsController extends Controller
 
                     $new_participant->save();
                     return redirect()->route('classrooms.show', $id)->with('msgParticipantS', 'User berhasil ditambahkan');die;
-                }else{
+                }elseif ($participant->status == 'Ada') {
                     return redirect()->route('classrooms.show', $id)->with('msgParticipantE', 'User ini telah mengikuti kelas');die;
+                }else{
+                    $participant->status = "Ada";
+                    $participant->save();
+                    return redirect()->route('classrooms.show', $id)->with('msgParticipantS', 'User berhasil ditambahkan kembali');die;
                 }
             }
         }elseif ($request->has('keluarkan')) {
-            $participant = \App\Participant::where(['user_id' => $request->get('user_id'), 'classroom_id' => $request->get('classroom_id')])->first();
+
+            $classroom = \App\Classroom::findOrFail($request->get('classroom_id'));
+
+            if ($classroom->user_id == $request->user_id) {
+                return redirect()->route('classrooms.show', $id)->with('msgKeluarkanE', 'Pembuat kelas tidak bisa dikeluarkan, silahkan hapus kelas di halaman utama menu kelas');die;
+            }
+
+            $participant = \App\Participant::where(['user_id' => $request->get('user_id'), 'classroom_id' => $classroom->id])->first();
             $participant->status = 'Dikeluarkan';
             $participant->save();
-             return redirect()->route('classrooms.show', $id);
+            return redirect()->route('classrooms.show', $id)->with('msgKeluarkanS', 'User berhasil dikeluarkan !');die;
+        }elseif ($request->has('ubahMateri')){
+            $request->validate([
+                'judul_materi_ubah' => 'required|max:50',
+                'deskripsi_materi_ubah' => 'max:255',
+                'file_materi_ubah' => 'file|mimes:jpeg,png,jpg,docx,doc,pdf,rar,zip|max:2048'
+            ]);
+
+            $theory = \App\Theory::where('id', '=', $request->get('theory_id'))->first();
+
+            $theory->judul = $request->judul_materi_ubah;
+            $theory->deskripsi = $request->deskripsi_materi_ubah;
+
+            if ($request->file('file_materi_ubah')) {
+                $file = $request->file('file_materi_ubah')->store('theory_files', 'public');
+                $theory->file_name = $request->file('file_materi_ubah')->getClientOriginalName();
+                $theory->file = $file;
+            }
+            $theory->save();
+            return redirect()->route('classrooms.show', $id)->with('msgMateriSU', 'Materi berhasil diubah');die;
         }
     }
 
@@ -189,11 +219,21 @@ class ClassroomsController extends Controller
      */
     public function destroy($id)
     {
-        $classroom = \App\Classroom::findOrFail($id);
-        $classroom->delete();
 
         $participant = \App\Participant::where('classroom_id', '=', $id);
         $participant->delete();
+
+        $theory = \App\Theory::where('classroom_id', '=', $id);
+
+        if ($theory->file && file_exists(storage_path('app/public/' . $theory->file))) {
+            \Storage::delete('public/' . $theory->file);    
+        }
+
+        $theory->delete();
+
+        $classroom = \App\Classroom::findOrFail($id);
+        $classroom->delete();
+
 
         return redirect()->route('classrooms.index')->with('success', 'Data berhasil dihapus');
     }
@@ -224,6 +264,48 @@ class ClassroomsController extends Controller
             }
         }
 
+    }
+
+    public function theories(Request $request, $id){
+
+        if ($request->has('tambahMateri')) {
+            $request->validate([
+                'judul_materi' => 'required|max:50',
+                'deskripsi_materi' => 'max:255',
+                'file_materi' => 'file|mimes:jpeg,png,jpg,docx,doc,pdf,rar,zip|max:2048'
+            ]);
+    
+            $theory = new \App\Theory;
+            $theory->user_id = Auth::user()->id;
+            $theory->classroom_id = $request->classroom_id;
+            $theory->judul = $request->judul_materi;
+            $theory->deskripsi = $request->deskripsi_materi;
+            $theory->slug = Str::random(10);
+    
+            if ($request->file('file_materi')) {
+                $file = $request->file('file_materi')->store('theory_files', 'public');
+                $theory->file_name = $request->file('file_materi')->getClientOriginalName();
+                $theory->file = $file;
+            }
+            $theory->save();
+            return redirect()->route('classrooms.show', $id)->with('msgMateriS', 'Materi berhasil ditambahkan');die;
+        }elseif ($request->has('lihatMateri')){
+            $theory = \App\Theory::where('id', '=', $request->get('theory_id'))->first();
+            echo json_encode($theory);
+        }elseif ($request->has('ubahMateri')) {
+            $theory = \App\Theory::where('id', '=', $request->get('theory_id'))->first();
+            echo json_encode($theory);
+        }elseif ($request->has('hapusMateri')) {
+            $theory = \App\Theory::where('id', '=', $request->get('theory_id'))->first();
+
+            if ($theory->file && file_exists(storage_path('app/public/' . $theory->file))) {
+                \Storage::delete('public/' . $theory->file);    
+            }
+
+            $theory->delete();
+            return redirect()->route('classrooms.show', $id);
+        }
+        
     }
 
 }
