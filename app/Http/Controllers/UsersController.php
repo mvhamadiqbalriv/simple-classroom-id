@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Str;
 
 class UsersController extends Controller
 {
@@ -60,6 +61,8 @@ class UsersController extends Controller
         $user->roles = $request->get('roles');
         $user->address = $request->get('address');
         $user->phone = $request->get('phone');
+        $user->email_verified_at = now();
+        $user->remember_token = Str::random(10);
         $user->password = Hash::make($request->get('password'));
 
         if ($request->file('avatar')) {

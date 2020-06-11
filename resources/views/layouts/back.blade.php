@@ -13,6 +13,7 @@
     <link rel="stylesheet" href="{{asset('template/back-ui/vendor/@fortawesome/fontawesome-free/css/all.min.css')}} " type="text/css">
     <!-- Argon CSS -->
     <link rel="stylesheet" href="{{asset('template/back-ui/css/argon.css?v=1.2.0')}}" type="text/css">
+    @yield('css')
 </head>
 <body>
         <!-- Sidenav -->

@@ -12,4 +12,8 @@ class Classroom extends Model
     public function user(){
         return $this->belongsTo('App\User');
     }
+
+    public function participant(){
+        return $this->hasMany('App\Participant');
+    }
 }

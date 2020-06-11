@@ -26,8 +26,11 @@
                             @error('token')
                             <span class="text-danger"><small><b><i>{{$message}}</i></b></small> </span>
                             @enderror
-                            @if (session('msgParticipant'))
+                            @if (session('msgParticipantE'))
                                 <span class="text-danger"><small><b><i>{{session('msgParticipant')}}</i></b></small> </span>
+                            @endif
+                            @if (session('msgParticipantS'))
+                                <span class="text-success"><small><b><i>{{session('msgParticipant')}}</i></b></small> </span>
                             @endif
                         </div>
                         <div class="modal-footer">
@@ -87,12 +90,20 @@
                                 <i class="fas fa-ellipsis-v"></i>
                             </a>
                             <div class="dropdown-menu dropdown-menu-right dropdown-menu-arrow">
+                                @if (Auth::user()->roles == 'Admin' || Auth::user()->id == $item->user_id)
                                 <a class="dropdown-item" href="{{route('classrooms.show', $item->token)}} " class="btn btn-primary btn-sm">Show & Edit</a>
-                                <form onsubmit="return confirm('Delete this user permanently?')" class="d-inline"
+                                <form onsubmit="return confirm('Apakah anda yakin menghapus kelas ini dan beserta isinya?')" class="d-inline"
                                     action="{{route('classrooms.destroy', $item->id)}}" method="POST"> @csrf
                                     <input type="hidden" name="_method" value="DELETE">
                                     <input type="submit" value="Delete" class="dropdown-item">
                                 </form>
+                                @else
+                                <form onsubmit="return confirm('Apakah anda yakin akan keluar dari kelas ini?')" class="d-inline"
+                                    action="{{route('classrooms.update', Auth::user()->id)}}" method="POST"> @csrf
+                                    <input type="hidden" name="_method" value="PUT">
+                                    <input type="submit" name="keluarKelas" value="Keluar" class="dropdown-item">
+                                </form>
+                                @endif
                             </div>
                         </div>
                     </div>
@@ -107,7 +118,7 @@
 </div>
 @endsection
 @section('js')
-@if (session('msgParticipant') || $errors->has('token') )
+@if (session('msgParticipantE') || session('msgParticipantS') || $errors->has('token') )
 <script>
     $(function() {
             $('#ikutiKelas').modal('show');

@@ -15,11 +15,31 @@ class ClassroomsController extends Controller
      */
     public function index(Request $request)
     {
-        $classrooms = \App\Classroom::latest()->paginate(6);
+
+        if (Auth::user()->roles != 'Admin') {
+            $participant = \App\Participant::where([['user_id', '=', Auth::user()->id], ['status', '=', 'Ada']])->get();
+            $arrCSID = [];
+            foreach ($participant as $item) {
+                array_push($arrCSID, $item->classroom_id);
+            }
+        }
+
+        if (!$arrCSID && Auth::user()->roles == 'Admin') {
+            $classrooms = \App\Classroom::latest()->paginate(6);
+        }else{
+            $classrooms = \App\Classroom::whereIn('id', $arrCSID)->latest()->paginate(6);
+        }
+
         $filterKeyword = $request->get('keyword');
+
         
         if ($filterKeyword) {
-            $classrooms = \App\Classroom::where('nama_kelas', 'LIKE', "%$filterKeyword%")->latest()->paginate(5);
+            if (!$arrCSID && Auth::user()->roles == 'Admin') {
+                $classrooms = \App\Classroom::where('nama_kelas', 'LIKE', "%$filterKeyword%")->latest()->paginate(5);
+            }else{
+                $classrooms = \App\Classroom::whereIn('id', $arrCSID)->where('nama_kelas', 'LIKE',
+                "%$filterKeyword%")->latest()->paginate(5);
+            }
         }
 
         return view('back-ui.classrooms.index', ['classrooms' => $classrooms]);
@@ -58,9 +78,17 @@ class ClassroomsController extends Controller
         $classroom->token = Str::random(8);
 
         $classroom->save();
+
+        $new_participant = new \App\Participant;
+
+        $new_participant->user_id = Auth::user()->id;
+        $new_participant->classroom_id = $classroom->id;
+
+        $new_participant->save();
+
         return redirect()->route('classrooms.create')->with('status', 'Kelas berhasil ditambahkan');
     }
-
+    
     /**
      * Display the specified resource.
      *
@@ -70,7 +98,10 @@ class ClassroomsController extends Controller
     public function show($id)
     {
         $classroom = \App\Classroom::where('token', '=', $id)->first();
-        return view('back-ui.classrooms.edit', ['classroom' => $classroom]);
+
+        $participant = \App\Participant::where(['classroom_id' => $classroom->id, 'status' => 'Ada'])->get();
+
+        return view('back-ui.classrooms.edit', ['classroom' => $classroom , 'participant' => $participant]);
     }
 
     /**
@@ -93,11 +124,13 @@ class ClassroomsController extends Controller
      */
     public function update(Request $request, $id)
     {
+        
         if ($request->has('updateInformation')) {
+            
             $request->validate([
                 'nama_kelas' => 'required|max:20',
                 'bidang_ilmu' => 'required|max:50',
-                'deskripsi' => 'max:100',
+                'deskripsi' => 'max:255',
             ]);
     
             $classroom = \App\Classroom::findOrFail($id);
@@ -107,7 +140,39 @@ class ClassroomsController extends Controller
             $classroom->deskripsi = $request->get('deskripsi');
 
             $classroom->save();
-            return redirect()->route('classrooms.show', $classroom->token)->with('success', 'Kelas berhasil diupdate');
+            return redirect()->route('classrooms.show', $classroom->token)->with('success', 'Kelas berhasil diupdate');die;
+        }elseif ($request->has('keluarKelas')) {
+    
+            $participant = \App\Participant::findOrFail($id);
+    
+            $participant->status = "Keluar";
+
+            $participant->save();
+            return redirect()->route('classrooms.index')->with('keluarKelas', 'Anda berhasil keluar kelas');die;
+        }elseif ($request->has('undangPeserta')) {
+            $request->validate(['username' => 'required']);
+            
+            $user = \App\User::where('username', '=', $request->username)->first();
+
+            if (!$user) {
+                return redirect()->route('classrooms.show', $id)->with('msgParticipantE', 'Username anda yang masukan
+                belum terdaftar di aplikasi ini');
+            }else {
+                $participant = \App\Participant::where(['user_id' => $user->id, 'classroom_id' => $id])->first();
+                if (!$participant) {
+                    $classroom = \App\Classroom::where('token', '=', $id)->first();
+
+                    $new_participant = new \App\Participant;
+
+                    $new_participant->user_id = $user->id;
+                    $new_participant->classroom_id = $classroom->id;
+
+                    $new_participant->save();
+                    return redirect()->route('classrooms.show', $id)->with('msgParticipantS', 'User berhasil ditambahkan');die;
+                }else{
+                    return redirect()->route('classrooms.show', $id)->with('msgParticipantE', 'User ini telah mengikuti kelas');die;
+                }
+            }
         }
     }
 
@@ -119,20 +184,24 @@ class ClassroomsController extends Controller
      */
     public function destroy($id)
     {
-        $user = \App\Classroom::findOrFail($id);
-        $user->delete();
+        $classroom = \App\Classroom::findOrFail($id);
+        $classroom->delete();
+
+        $participant = \App\Participant::where('classroom_id', '=', $id);
+        $participant->delete();
+
         return redirect()->route('classrooms.index')->with('success', 'Data berhasil dihapus');
     }
 
-    public function create_participant(Request $request){
+    public function create_participant(Request $request, $id){
 
         $request->validate(['token' => 'required']);
 
         $classroom = \App\Classroom::where('token', '=', $request->token)->first();
 
         if (!$classroom) {
-            return redirect()->route('classrooms.index')->with('msgParticipant', 'Token anda yang masukan
-            belum terdaftar');
+            return redirect()->route('classrooms.index')->with('msgParticipantE', 'Token anda yang masukan
+            belum terdaftar');die;
         }else {
             $participant = \App\Participant::where(['user_id' => Auth::user()->id, 'classroom_id' => $classroom->id])->first();
             if (!$participant) {
@@ -142,9 +211,9 @@ class ClassroomsController extends Controller
                 $new_participant->classroom_id = $classroom->id;
 
                 $new_participant->save();
-                return redirect()->route('classrooms.index')->with('msgParticipant', 'Kelas berhasil ditambahkan');
+                return redirect()->route('classrooms.index')->with('msgParticipantS', 'Kelas berhasil ditambahkan');die;
             }else{
-                return redirect()->route('classrooms.index')->with('msgParticipant', 'Data berhasil dihapus');
+                return redirect()->route('classrooms.index')->with('msgParticipantE', 'Kelas sudah anda ikuti');die;
             }
         }
 
