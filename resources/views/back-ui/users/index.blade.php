@@ -54,11 +54,11 @@
                                 <tr>
                                     <th scope="row">
                                         <div class="media align-items-center">
-                                            <a href="#" class="avatar rounded-circle mr-3">
+                                            <a href="{{route('users.show', $user->username)}} " target="_blank" class="avatar rounded-circle mr-3">
                                                 <img alt="Image placeholder" width="48" height="48" style="object-fit: cover" src="{{asset('storage/'.$user->avatar)}}">
                                             </a>
                                             <div class="media-body">
-                                                <span class="name mb-0 text-sm">{{$user->name}} </span>
+                                                <span class="name mb-0 text-sm"><a href="{{route('users.show', $user->username)}}" target="_blank" style="color:black"> {{$user->name}} </a></span>
                                             </div>
                                         </div>
                                     </th>

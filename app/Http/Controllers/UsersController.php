@@ -44,7 +44,7 @@ class UsersController extends Controller
     {
         $request->validate([
             'name' => 'required|regex:/^[\pL\s\-]+$/u|max:50',
-            'username' => 'required|alpha_dash|unique:App\User,username|max:50|min:3',
+            'username' => 'required|alpha_dash|unique:App\User,username|max:8|min:3',
             'email' => 'required|unique:App\User,email',
             'roles' => 'required',
             'address' => 'max:255',
@@ -114,6 +114,7 @@ class UsersController extends Controller
         if ($request->has('updateInformation')) {
             $request->validate([
                 'name' => 'required|regex:/^[\pL\s\-]+$/u|max:50',
+                'username' => 'required|alpha_dash|unique:App\User,username|max:8|min:3',
                 'email' => 'required|unique:App\User,email,'.$id,
                 'roles' => 'required',
                 'phone' => ['regex:/\+?([-]?\d+)+|\(\d+\)([-]\d+)/'],
@@ -121,17 +122,18 @@ class UsersController extends Controller
             ]);
     
             $user->name = $request->get('name');
+            $user->username = $request->get('username');
             $user->email = $request->get('email');
             $user->roles = $request->get('roles');
             $user->phone = $request->get('phone');
             $user->address = $request->get('address');
     
             $user->save();
-            return redirect()->route('users.edit', $user->username)->with('success', 'Data berhasil diubah');
+            return redirect()->route('users.show', $user->username)->with('success', 'Data berhasil diubah');die;
         }elseif ($request->has('updatePassword')) { 
             
             if (!Hash::check($request->get('old_password'), $user->password)) {
-                return redirect()->route('users.edit', $user->username)->with('notMatch', 'Password doesnt match with
+                return redirect()->route('users.show', $user->username)->with('notMatch', 'Password doesnt match with
                 current/old password ');
                 die;
             }
@@ -142,8 +144,8 @@ class UsersController extends Controller
             ]);
 
             $user->update(['password'=> Hash::make($request->new_password)]);
-            return redirect()->route('users.edit', $user->username)->with('successChangePassword', 'Password berhasil
-            diubah');
+            return redirect()->route('users.show', $user->username)->with('successChangePassword', 'Password berhasil
+            diubah');die;
         }elseif ($request->has('avatar')) {
             $request->validate([
                 'avatar' => 'mimes:jpeg,png,gif,webp,jpg|max:2048'

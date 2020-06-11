@@ -27,10 +27,10 @@
                             <span class="text-danger"><small><b><i>{{$message}}</i></b></small> </span>
                             @enderror
                             @if (session('msgParticipantE'))
-                                <span class="text-danger"><small><b><i>{{session('msgParticipant')}}</i></b></small> </span>
+                                <span class="text-danger"><small><b><i>{{session('msgParticipantE')}}</i></b></small> </span>
                             @endif
                             @if (session('msgParticipantS'))
-                                <span class="text-success"><small><b><i>{{session('msgParticipant')}}</i></b></small> </span>
+                                <span class="text-success"><small><b><i>{{session('msgParticipantS')}}</i></b></small> </span>
                             @endif
                         </div>
                         <div class="modal-footer">

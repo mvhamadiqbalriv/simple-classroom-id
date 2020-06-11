@@ -196,9 +196,12 @@ Kelas
                                         </a>
                                         <div class="dropdown-menu dropdown-menu-right dropdown-menu-arrow">
                                             <form onsubmit="return confirm('Apakah anda yakin mengeluarkan user ini?')" class="d-inline"
-                                                action="#" method="POST"> @csrf
-                                                <input type="hidden" name="_method" value="DELETE">
-                                                <input type="submit" value="Delete" class="dropdown-item">
+                                                action="{{route('classrooms.update', $classroom->token)}} " method="POST"> 
+                                                @csrf
+                                                <input type="hidden" name="_method" value="PUT">
+                                                <input type="hidden" name="user_id" value="{{$item->user->id}}">
+                                                <input type="hidden" name="classroom_id" value="{{$classroom->id}}">
+                                                <input type="submit" name="keluarkan" value="Keluarkan" class="dropdown-item">
                                             </form>
                                         </div>
                                     </div>
@@ -216,7 +219,7 @@ Kelas
                     <div class="card-header border-0">
                         <div class="row align-items-center">
                             <div class="col">
-                                <h3 class="mb-0">Social traffic</h3>
+                                <h3 class="mb-0">Materi Kelas</h3>
                             </div>
                             <div class="col text-right">
                                 <a href="#!" class="btn btn-sm btn-primary">See all</a>

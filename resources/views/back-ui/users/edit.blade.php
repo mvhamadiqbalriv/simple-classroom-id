@@ -1,6 +1,6 @@
 @extends('layouts.back')
 @section('title')
-    Ubah User
+    {{$user->username}}
 @endsection
 @section('breadcrumb')
     {{ Breadcrumbs::render('user_edit', $user) }}

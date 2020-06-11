@@ -173,6 +173,11 @@ class ClassroomsController extends Controller
                     return redirect()->route('classrooms.show', $id)->with('msgParticipantE', 'User ini telah mengikuti kelas');die;
                 }
             }
+        }elseif ($request->has('keluarkan')) {
+            $participant = \App\Participant::where(['user_id' => $request->get('user_id'), 'classroom_id' => $request->get('classroom_id')])->first();
+            $participant->status = 'Dikeluarkan';
+            $participant->save();
+             return redirect()->route('classrooms.show', $id);
         }
     }
 
@@ -193,7 +198,7 @@ class ClassroomsController extends Controller
         return redirect()->route('classrooms.index')->with('success', 'Data berhasil dihapus');
     }
 
-    public function create_participant(Request $request, $id){
+    public function create_participant(Request $request){
 
         $request->validate(['token' => 'required']);
 
@@ -212,8 +217,10 @@ class ClassroomsController extends Controller
 
                 $new_participant->save();
                 return redirect()->route('classrooms.index')->with('msgParticipantS', 'Kelas berhasil ditambahkan');die;
+            }elseif ($participant->status = "Keluar" || $participant->status = "Dikeluarkan") {
+                return redirect()->route('classrooms.index')->with('msgParticipantE', 'Anda sudah keluar atau dikeluarkan dari kelas ini, silahkan hubungi admin kelas');die;
             }else{
-                return redirect()->route('classrooms.index')->with('msgParticipantE', 'Kelas sudah anda ikuti');die;
+                return redirect()->route('classrooms.index')->with('msgParticipantE', 'Anda sudah mengikuti kelas ini');die;
             }
         }
 
