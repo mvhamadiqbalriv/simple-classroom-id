@@ -223,13 +223,17 @@ class ClassroomsController extends Controller
         $participant = \App\Participant::where('classroom_id', '=', $id);
         $participant->delete();
 
-        $theory = \App\Theory::where('classroom_id', '=', $id);
+        $theory = \App\Theory::where('classroom_id', '=', $id)->get();
 
-        if ($theory->file && file_exists(storage_path('app/public/' . $theory->file))) {
-            \Storage::delete('public/' . $theory->file);    
+        if (!$theory->isEmpty()) {
+            foreach ($theory as $item) {
+                if ($item->file && file_exists(storage_path('app/public/' . $item->file))) {
+                    \Storage::delete('public/' . $item->file);    
+                }
+            }
+            $theorys = \App\Theory::where('classroom_id', '=', $id);
+            $theorys->delete();
         }
-
-        $theory->delete();
 
         $classroom = \App\Classroom::findOrFail($id);
         $classroom->delete();

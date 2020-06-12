@@ -22,7 +22,7 @@
                                     <div class="input-group-prepend">
                                         <span class="input-group-text"><i class="ni ni-circle-08"></i></span>
                                     </div>
-                                    <input class="form-control" name="name" type="search" value="{{old('name', null)}}" placeholder="Name">
+                                    <input class="form-control" name="name" type="search" value="{{old('name', null)}}" placeholder="Name*">
                                 </div>
                                 @error('name')
                                     <span class="text-danger"><small><b><i>{{$message}}</i></b></small> </span>
@@ -33,7 +33,7 @@
                                     <div class="input-group-prepend">
                                         <span class="input-group-text"><i class="ni ni-single-02"></i></span>
                                     </div>
-                                    <input class="form-control" name="username" type="search" value="{{old('username', null)}}" placeholder="Username">
+                                    <input class="form-control" name="username" type="search" value="{{old('username', null)}}" placeholder="Username*">
                                 </div>
                                 @error('username')
                                     <span class="text-danger"><small><b><i>{{$message}}</i></b></small> </span>
@@ -44,7 +44,7 @@
                                     <div class="input-group-prepend">
                                         <span class="input-group-text"><i class="ni ni-email-83"></i></span>
                                     </div>
-                                    <input class="form-control" placeholder="Email" value="{{old('email', null)}}" name="email" type="email">
+                                    <input class="form-control" placeholder="Email*" value="{{old('email', null)}}" name="email" type="email">
                                 </div>
                                 @error('email')
                                    <span class="text-danger"><small><b><i>{{$message}}</i></b></small> </span>
@@ -55,7 +55,7 @@
                                     <div class="input-group-prepend">
                                         <span class="input-group-text"><i class="ni ni-lock-circle-open"></i></span>
                                     </div>
-                                    <input class="form-control" placeholder="Password" name="password" type="password">
+                                    <input class="form-control" placeholder="Password*" name="password" type="password">
                                 </div>
                                 @error('password')
                                    <span class="text-danger"><small><b><i>{{$message}}</i></b></small> </span>
@@ -66,7 +66,7 @@
                                     <div class="input-group-prepend">
                                         <span class="input-group-text"><i class="ni ni-lock-circle-open"></i></span>
                                     </div>
-                                    <input class="form-control" placeholder="Password Confrimation" name="password_confirmation" type="password">
+                                    <input class="form-control" placeholder="Password Confrimation*" name="password_confirmation" type="password">
                                 </div>
                                 @error('password_confirmation')
                                    <span class="text-danger"><small><b><i>{{$message}}</i></b></small> </span>
@@ -126,6 +126,7 @@
                                    <span class="text-danger"><small><b><i>{{$message}}</i></b></small> </span>
                                 @enderror
                                 </div>
+                                <span class="text-warning"><small><b>field input dengan tanda(*) wajib diisi</b></small> </span>
                             <div class="text-center">
                                 <button type="submit" class="btn btn-primary mt-4">Create account</button>
                             </div>

@@ -1,0 +1,1 @@
+web: cendor/bin/heroku-app-apache2 web/

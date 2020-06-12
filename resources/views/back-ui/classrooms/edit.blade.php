@@ -71,7 +71,7 @@
                 <form action="{{route('classrooms.update', $classroom->id)}}" method="POST">
                     @csrf
                     <input type="hidden" value="PUT" name="_method">
-                    <h6 class="heading-small text-muted mb-4">Kelas information | <i>Token : <strong>{{$classroom->token}} </strong></i></h6>
+                    <h6 class="heading-small text-muted mb-4">Kelas information</h6>
                     <div class="pl-lg-4">
                         @if(session('success')) <div class="alert alert-success alert-dismissible fade show text-center"
                             role="alert">
@@ -115,7 +115,7 @@
                             </div>
                         </div>
                         <div class="text-left">
-                            <button type="submit" name="updateInformation" class="btn btn-primary mt-4">Edit User</button>
+                            <button type="submit" name="updateInformation" class="btn btn-primary mt-4">Edit Kelas</button>
                         </div>
                         </div>
                     </div>
@@ -315,20 +315,45 @@
                             @endif
                             </div>
                     </div>
-                    <div class="modal fade" id="detailMateri" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle"
+                    <div class="modal fade bd-example-modal-lg" id="detailMateri" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle"
                         aria-hidden="true">
-                        <div class="modal-dialog modal-dialog-centered" role="document">
+                        <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
                             <div class="modal-content">
                                 <div class="modal-header">
-                                    <h5 class="modal-title" id="exampleModalLongTitle"></h5>
+                                    <h5 class="modal-title" id="">Detail Materi</h5>
                                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                         <span aria-hidden="true">&times;</span>
                                     </button>
                                 </div>
                                 <div class="modal-body">
-                                    <p class="h4" id="modalDeskripsi"></p>
-                                    <br><i class="fa fa-file"></i>
-                                    <a href="#" class="h5 mt-5" id="modalFile">  Tidak ada file</a>
+                                    <div class="table-responsive">
+                                                    <table class="table align-items-center table-flush">
+                                                        <thead class="thead-light">
+                                                            <tr>
+                                                                <th scope="col" style="width: 10px;" class="sort" data-sort="judul">Judul</th>
+                                                                <th scope="col" style="width: 10px;" class="sort" data-sort="deskripsi">Deksripsi</th>
+                                                                <th scope="col" style="width: 10px;" class="sort" data-sort="file">File</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody class="list">
+                                                            <tr>
+                                                                <td scope="row"  style="width: 10px">
+                                                                    <div class="media align-items-center">
+                                                                        <div class="media-body">
+                                                                            <span class="name mb-0 text-sm" id="judul_materi_detail">Argon Design System</span>
+                                                                        </div>
+                                                                    </div>
+                                                                </td>
+                                                                <td class="deskripsi"  style="width: 10px" id="deskripsi_materi_detail">
+                                                                    $2500 USD
+                                                                </td>
+                                                                <td>
+                                                                    <a href="#" class="h5 mt-5" id="file_materi_detail" style="width: 10px"> Tidak ada file</a></td>
+                                                                </td>
+                                                            </tr>
+                                                        </tbody>
+                                                    </table>
+                                                </div>
                                 </div>
                                 <div class="modal-footer">
                                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
@@ -475,7 +500,7 @@
         $(document).ready(function () {
             $('.lihatMateri').click(function(){
                 $('#detailMateri').modal('show');
-                $('#modalFile').attr("download", "")
+                $('#file_materi_detail').attr("download", "")
                 var theory_id = $(this).attr("id");
                 var lihatMateri = true;
 
@@ -488,17 +513,17 @@
                         "_token": "{{ csrf_token() }}"},
                     success : function(data){
                         var result = JSON.parse(data);
-                        $('#exampleModalLongTitle').html(result.judul);
-                        $('#modalDeskripsi').html(result.deskripsi);
+                        $('#judul_materi_detail').html(result.judul);
+                        $('#deskripsi_materi_detail').html(result.deskripsi);
                         if (result.file_name === null) {
-                            $('#modalFile').html("Tidak ada file");
-                            $('#modalFile').removeAttr('download');
-                            $('#modalFile').attr('href', '#');
-                            $('#modalFile').css('color', 'grey');
+                            $('#file_materi_detail').html("Tidak ada file");
+                            $('#file_materi_detail').removeAttr('download');
+                            $('#file_materi_detail').attr('href', '#');
+                            $('#file_materi_detail').css('color', 'grey');
                         }else{
-                            $('#modalFile').html(result.file_name);
-                            $('#modalFile').css('color', 'blue');
-                            $('#modalFile').attr('href', '{{asset("storage/")}}/'+result.file);   
+                            $('#file_materi_detail').html(result.file_name);
+                            $('#file_materi_detail').css('color', 'blue');
+                            $('#file_materi_detail').attr('href', '{{asset("storage/")}}/'+result.file);   
                         }
                     }
                 })

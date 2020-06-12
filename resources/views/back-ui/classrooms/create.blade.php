@@ -23,7 +23,7 @@
                                     <span class="input-group-text"><i class="ni ni-hat-3"></i></span>
                                 </div>
                                 <input class="form-control" name="nama_kelas" type="search" value="{{old('nama_kelas', null)}}"
-                                placeholder="Nama Kelas">
+                                placeholder="Nama Kelas*">
                             </div>
                             @error('nama_kelas')
                             <span class="text-danger"><small><b><i>{{$message}}</i></b></small> </span>

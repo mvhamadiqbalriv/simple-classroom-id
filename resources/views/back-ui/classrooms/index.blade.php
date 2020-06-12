@@ -117,6 +117,11 @@
     </div>
     @endforeach
 </div>
+<nav aria-label="Page navigation example">
+    <ul class="pagination justify-content-center">
+        {{$classrooms->appends(Request::all())->links()}}
+    </ul>
+</nav>
 @endsection
 @section('js')
 @if (session('msgParticipantE') || session('msgParticipantS') || $errors->has('token') )

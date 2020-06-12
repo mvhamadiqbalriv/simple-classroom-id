@@ -124,7 +124,6 @@ class UsersController extends Controller
                 'name' => 'required|regex:/^[\pL\s\-]+$/u|max:50',
                 'username' => 'required|alpha_dash|max:8|min:3|unique:App\User,username,'.$id,
                 'email' => 'required|unique:App\User,email,'.$id,
-                'roles' => 'required',
                 'phone' => ['regex:/\+?([-]?\d+)+|\(\d+\)([-]\d+)/'],
                 'address' => 'max:255'
             ]);
