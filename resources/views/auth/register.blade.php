@@ -1,5 +1,7 @@
 @extends('layouts.front')
-
+@section('title')
+Register - SCID
+@endsection
 @section('content')
 <div class="main-content">
     <!-- Header -->

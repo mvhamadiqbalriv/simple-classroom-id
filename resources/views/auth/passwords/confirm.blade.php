@@ -1,5 +1,7 @@
 @extends('layouts.front')
-
+@section('title')
+Konfirmasi Password - SCID
+@endsection
 @section('content')
 <div class="container">
     <div class="row justify-content-center">

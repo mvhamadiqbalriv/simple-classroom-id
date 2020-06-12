@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <title>{{ config('app.name', 'Laravel') }}</title>
+    <title>@yield('title')</title>
     <!-- Favicon -->
     <link rel="icon" href="{{asset('template/back-ui/img/brand/favicon.png')}}" type="image/png">
     <!-- Fonts -->
@@ -96,15 +96,15 @@
                 <div class="col-xl-6">
                     <ul class="nav nav-footer justify-content-center justify-content-xl-end">
                         <li class="nav-item">
-                            <a href="#" class="nav-link" target="_blank">Landing</a>
+                        <a href="{{ url('/') }} " class="nav-link" target="_blank">Landing</a>
                         </li>
-                        <li class="nav-item">
-                            <a href="#" class="nav-link" target="_blank">About
+                        {{-- <li class="nav-item">
+                            <a href="#!" class="nav-link" target="_blank">About
                                 Us</a>
                         </li>
                         <li class="nav-item">
-                            <a href="#" class="nav-link" target="_blank">Contact</a>
-                        </li>
+                            <a href="#!" class="nav-link" target="_blank">Contact</a>
+                        </li> --}}
                     </ul>
                 </div>
             </div>

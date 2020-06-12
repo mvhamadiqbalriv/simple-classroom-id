@@ -1,5 +1,7 @@
 @extends('layouts.front')
-
+@section('title')
+    Login - SCID
+@endsection
 @section('content')
 <!-- Main content -->
 <div class="main-content">
