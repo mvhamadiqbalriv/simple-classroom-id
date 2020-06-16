@@ -15,7 +15,6 @@
     <link rel="stylesheet" href="{{asset('template/back-ui/css/argon.css?v=1.2.0')}}" type="text/css">
 </head>
 <body class="bg-default">
-    <div id="app">
         <nav id="navbar-main" class="navbar navbar-horizontal navbar-transparent navbar-main navbar-expand-lg navbar-light">
             <div class="container">
                 <a class="navbar-brand" href="dashboard.html">
@@ -82,34 +81,33 @@
             </div>
         </nav>
         @yield('content')    
-    </div>
-    <!-- Footer -->
-    <footer class="py-5" id="footer-main">
-        <div class="container">
-            <div class="row align-items-center justify-content-xl-between">
-                <div class="col-xl-6">
-                    <div class="copyright text-center text-xl-left text-muted">
-                        &copy; 2020 <a href="#" class="font-weight-bold ml-1"
-                            target="_blank">KELOMPOK 9</a>
+        <!-- Footer -->
+        <footer class="py-5" id="footer-main">
+            <div class="container">
+                <div class="row align-items-center justify-content-xl-between">
+                    <div class="col-xl-6">
+                        <div class="copyright text-center text-xl-left text-muted">
+                            &copy; 2020 <a href="#" class="font-weight-bold ml-1"
+                                target="_blank">KELOMPOK 9</a>
+                        </div>
+                    </div>
+                    <div class="col-xl-6">
+                        <ul class="nav nav-footer justify-content-center justify-content-xl-end">
+                            <li class="nav-item">
+                            <a href="{{ url('/') }} " class="nav-link" target="_blank">Landing</a>
+                            </li>
+                            {{-- <li class="nav-item">
+                                <a href="#!" class="nav-link" target="_blank">About
+                                    Us</a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="#!" class="nav-link" target="_blank">Contact</a>
+                            </li> --}}
+                        </ul>
                     </div>
                 </div>
-                <div class="col-xl-6">
-                    <ul class="nav nav-footer justify-content-center justify-content-xl-end">
-                        <li class="nav-item">
-                        <a href="{{ url('/') }} " class="nav-link" target="_blank">Landing</a>
-                        </li>
-                        {{-- <li class="nav-item">
-                            <a href="#!" class="nav-link" target="_blank">About
-                                Us</a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="#!" class="nav-link" target="_blank">Contact</a>
-                        </li> --}}
-                    </ul>
-                </div>
             </div>
-        </div>
-    </footer>
+        </footer>
     <!-- Argon Scripts -->
     <!-- Core -->
     <script src="{{asset('template/back-ui/vendor/jquery/dist/jquery.min.js')}} "></script>

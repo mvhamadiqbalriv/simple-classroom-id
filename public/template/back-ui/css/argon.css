@@ -20050,10 +20050,10 @@ a.btn-icon-only
 
 .footer-auto-bottom
 {
-    position: absolute;
+    /* position: absolute;
     bottom: 0;
 
-    width: 100%;
+    width: 100%; */
 }
 
 .form-control-label
