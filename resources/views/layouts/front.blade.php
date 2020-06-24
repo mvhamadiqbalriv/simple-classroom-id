@@ -29,7 +29,7 @@
                         <div class="row">
                             <div class="col-6 collapse-brand">
                                 <a href="dashboard.html">
-                                    <img src="{{asset('template/back-ui/img/brand/blue.png')}} ">
+                                    <img src="{{asset('template/back-ui/img/brand/blue_scid.png')}} ">
                                 </a>
                             </div>
                             <div class="col-6 collapse-close">

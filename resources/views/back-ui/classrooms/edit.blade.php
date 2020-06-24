@@ -273,7 +273,7 @@
                                                                 <div class="input-group-prepend">
                                                                     <span class="input-group-text"><i class="ni ni-tag"></i></span>
                                                                 </div>
-                                                                <input class="form-control" name="judul_materi" type="search" value="{{old('judul', null)}}"
+                                                                <input class="form-control" name="judul_materi" type="text" value="{{old('judul_materi', null)}}"
                                                                     placeholder="Judul Materi">
                                                             </div>
                                                             @error('judul_materi')
@@ -285,7 +285,7 @@
                                                                 <div class="input-group-prepend">
                                                                     <span class="input-group-text"><i class="ni ni-align-left-2"></i></span>
                                                                 </div>
-                                                                <textarea name="deskripsi_materi" class="form-control" id="" cols="30" rows="10">{{old('judul', 'Deskripsi')}}</textarea>
+                                                                <textarea name="deskripsi_materi" class="form-control" id="" cols="30" rows="10">{{old('deskripsi_materi', 'Deskripsi')}}</textarea>
                                                             </div>
                                                             @error('deskripsi_materi')
                                                             <span class="text-danger"><small><b><i>{{$message}}</i></b></small> </span>
