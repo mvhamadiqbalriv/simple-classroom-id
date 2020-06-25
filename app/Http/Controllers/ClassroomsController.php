@@ -100,8 +100,9 @@ class ClassroomsController extends Controller
 
         $participant = \App\Participant::where(['classroom_id' => $classroom->id, 'status' => 'Ada'])->get();
         $theory = \App\Theory::where(['classroom_id' => $classroom->id])->get();
+        $deskjob = \App\Deskjob::where(['classroom_id' => $classroom->id])->get();
 
-        return view('back-ui.classrooms.edit', ['classroom' => $classroom , 'participant' => $participant, 'theory' => $theory]);
+        return view('back-ui.classrooms.edit', compact(['classroom', 'participant', 'theory', 'deskjob']));
     }
 
     /**

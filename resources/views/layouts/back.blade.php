@@ -48,6 +48,12 @@
                                     <span class="nav-link-text">Kelas</span>
                                 </a>
                             </li>
+                            <li class="nav-item">
+                                <a class="nav-link {{ request()->is('deskjobs*') ? 'active' : '' }}" href="{{route('deskjobs.index')}} ">
+                                    <i class="ni ni-bullet-list-67 text-danger"></i>
+                                    <span class="nav-link-text">Tugas</span>
+                                </a>
+                            </li>
                         </ul>
                     </div>
                 </div>
