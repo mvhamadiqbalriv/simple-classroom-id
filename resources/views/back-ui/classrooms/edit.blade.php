@@ -484,7 +484,7 @@
                             </div>
                             @if (Auth::user()->roles == 'Admin' || Auth::user()->id == $classroom->user_id)
                             <div class="col text-right">
-                                <a target="_blank" href="{!! route('deskjobs.create', ['classroom_id' => $classroom->user_id]) !!}" class="btn btn-sm btn-primary"><i class="fa fa-plus text-white"  aria-hidden="true"></i>&nbsp; Tugas</a>
+                                <a target="_blank" href="{!! route('deskjobs.create', ['token' => $classroom->token]) !!}" class="btn btn-sm btn-primary"><i class="fa fa-plus text-white"  aria-hidden="true"></i>&nbsp; Tugas</a>
                             </div>
                             @endif
                             </div>

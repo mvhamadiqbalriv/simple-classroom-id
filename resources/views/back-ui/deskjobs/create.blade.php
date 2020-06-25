@@ -1,9 +1,9 @@
 @extends('layouts.back')
 @section('title')
-    Tambah Kelas
+    Tambah Tugas
 @endsection
 @section('breadcrumb')
-    {{ Breadcrumbs::render('classroom_create') }}
+    {{ Breadcrumbs::render('deskjobs_create') }}
 @endsection
 @section('content')
 
@@ -15,46 +15,46 @@
                 <div class="card-body px-lg-5 py-lg-5">
                     @if(session('status')) <div class="alert alert-success text-center">{{session('status')}} </div>
                     @endif
-                    <form role="form" action="{{route('classrooms.store')}}" method="POST">
+                    <form action="{{route('deskjobs.store')}}" method="POST">
                         @csrf
                         <div class="form-group">
-                            <div class="input-group input-group-merge input-group-alternative mb-3">
-                                <div class="input-group-prepend">
-                                    <span class="input-group-text"><i class="ni ni-hat-3"></i></span>
-                                </div>
-                                <input class="form-control" name="nama_kelas" type="search" value="{{old('nama_kelas', null)}}"
-                                placeholder="Nama Kelas*">
-                            </div>
-                            @error('nama_kelas')
+                            <label for="judul" class="form-control-label">Judul</label>
+                            <input class="form-control" type="text" value="{{old('judul', null)}}" name="judul" placeholder="Judul Tugas" id="judul">
+                            @error('judul')
                             <span class="text-danger"><small><b><i>{{$message}}</i></b></small> </span>
                             @enderror
                         </div>
                         <div class="form-group">
-                            <div class="input-group input-group-merge input-group-alternative mb-3">
-                                <div class="input-group-prepend">
-                                    <span class="input-group-text"><i class="ni ni-book-bookmark"></i></span>
-                                </div>
-                                <input class="form-control" name="bidang_ilmu" type="search"
-                                value="{{old('bidang_ilmu', null)}}" placeholder="Bidang Ilmu">
-                            </div>
-                            @error('bidang_ilmu')
+                            <label for="judul" class="form-control-label">Kelas</label>
+                            <input type="hidden" class="form-control" name="classroom_id" value=" {{$classroom->id}} " id="">
+                            <input type="text" class="form-control" value=" {{$classroom->nama_kelas}} " id="" readonly>
+                            @error('classroom_id')
                             <span class="text-danger"><small><b><i>{{$message}}</i></b></small> </span>
                             @enderror
                         </div>
                         <div class="form-group">
-                            <div class="input-group input-group-merge input-group-alternative">
-                                <div class="input-group-prepend">
-                                    <span class="input-group-text"><i class="ni ni-square-pin"></i></span>
-                                </div>
-                                <textarea name="deskripsi" class="form-control" id="" cols="30"
-                                    rows="3"> {{old('deskripsi', 'Deskripsi')}}</textarea>
-                            </div>
-                            @error('deskripsi')
+                            <label for="petunjuk" class="form-control-label">Petunjuk</label>
+                            <textarea name="petunjuk" class="form-control" id="petunjuk" cols="20" rows="7">{{old('petunjuk')}} </textarea>
+                            @error('petunjuk')
+                            <span class="text-danger"><small><b><i>{{$message}}</i></b></small> </span>
+                            @enderror
+                        </div>
+                        <div class="form-group">
+                            <label for="file" class="form-control-label">File</label>
+                            <input class="form-control" type="file" name="file_tugas" id="file">
+                            @error('file_tugas')
+                            <span class="text-danger"><small><b><i>{{$message}}</i></b></small> </span>
+                            @enderror
+                        </div>
+                        <div class="form-group">
+                            <label for="example-datetime-local-input" class="form-control-label">Batas Waktu</label>
+                            <input class="form-control" name="due_date" type="datetime-local" value=" {{old('due_date', null)}} " id="example-datetime-local-input">
+                            @error('due_date')
                             <span class="text-danger"><small><b><i>{{$message}}</i></b></small> </span>
                             @enderror
                         </div>
                         <div class="text-center">
-                            <button type="submit" class="btn btn-primary mt-4">Create class</button>
+                            <button type="submit" name="tambahTugas" class="btn btn-primary mt-4">Tambah Tugas</button>
                         </div>
                     </form>
                 </div>

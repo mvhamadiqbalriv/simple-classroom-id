@@ -35,9 +35,21 @@ Breadcrumbs::for('classroom_create', function ($trail) {
     $trail->push('Tambah', route('classrooms.create'));
 });
 
-// Home > Classroom > Tambah
+// Home > Classroom > Edit
 Breadcrumbs::for('classroom_edit', function ($trail, $classroom) {
     $trail->parent('classroom');
     $trail->push($classroom->nama_kelas, route('classrooms.show', $classroom->token));
+});
+
+// Home > Deskjobs
+Breadcrumbs::for('deskjobs', function ($trail) {
+$trail->parent('home');
+$trail->push('Tugas', route('deskjobs.index'));
+});
+
+// Home > Tugas > Tambah
+Breadcrumbs::for('deskjobs_create', function ($trail) {
+$trail->parent('deskjobs');
+$trail->push('Tambah', route('deskjobs.create'));
 });
 
