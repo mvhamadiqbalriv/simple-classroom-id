@@ -91,10 +91,28 @@ class DeskjobsController extends Controller
      * @param  \App\Deskjob  $deskjob
      * @return \Illuminate\Http\Response
      */
-    public function show($deskjob)
+    public function show(Request $request, $deskjob)
     {
         
         $deskjob = \App\Deskjob::where('slug', $deskjob)->first();
+
+        if ($request->has('serahkanTugas')) {
+            $request->validate([
+                'file_tugas' => 'required|file|mimes:jpeg,png,jpg,docx,doc,pdf,rar,zip|max:2048',
+                'catatan' => 'max:100'
+            ]);
+            
+            $deskjob_users = \App\Deskjob_user::where(['user_id' => Auth::user()->id, 'deskjob_id' => $deskjob->id ])->first();
+            $file = $request->file('file_tugas')->store('deskjob_user_files', 'public');
+            $deskjob_users->file_name = $request->file('file_tugas')->getClientOriginalName();
+            $deskjob_users->file = $file;
+            $deskjob_users->status = 'sudah';
+            if ($request->has('catatan')) {
+                $deskjob_users->catatan = $request->catatan;
+            }
+            $deskjob_users->save();
+             return redirect()->route('deskjobs.show', $deskjob->slug)->with('status', 'Tugas berhasil diserahkan');die;
+        }
 
         return view('back-ui.deskjobs.detail', compact('deskjob'));
     }

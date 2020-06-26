@@ -6,6 +6,15 @@
 {{ Breadcrumbs::render('deskjob_detail', $deskjob) }}
 @endsection
 @section('content')
+@if (session('status'))
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+        <span class="alert-icon"><i class="ni ni-like-2"></i></span>
+        <span class="alert-text"><strong>Success!</strong> {{session('status')}} !</span>
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+@endif
 <div class="row">
     <div class="col-md-8">
         <div class="card">
@@ -28,11 +37,11 @@
                 </div>
                 <br>
                 <p class="card-text">
-                    {{$deskjob->petunjuk}} Lorem ipsum dolor sit amet consectetur adipisicing elit. Consectetur, quia. Ipsa alias sit harum odit magnam enim et, inventore labore excepturi eum sapiente quasi dolor unde nihil, reprehenderit natus voluptatem.
+                    {{$deskjob->petunjuk}} 
                 </p>
                 @if (!empty($deskjob->file))
                 <a href=" {{asset('storage/'.$deskjob->file)}}" download>
-                    <div class="border border-dark download-deskjob-file"  data-toggle="tooltip" data-placement="bottom" title="Download">
+                    <div class="border border-dark download-deskjob-file rounded"  data-toggle="tooltip" data-placement="bottom" title="Download">
                         <div class="container" style="margin: 10px auto;"> <i class="fa fa-file mr-2" style="color:black" aria-hidden="true"></i>
                             {{$deskjob->file_name}} 
                         </div>
@@ -46,11 +55,63 @@
         <div class="card">
             <div class="card-body">
                 <h3 class="card-title">Kumpulkan Tugas</h3>
+                <div class="text-sm mb-3">
+                    <b>Batas Waktu : </b>
+                    <div class="demo" style="display: inline-block"></div>
+                </div>
                 <div>
-                    <a href="#" class="btn btn-primary"> <i class="ni ni-send text-white mr-3"></i>Serahkan Tugas</a>
+                    <a href="#" data-toggle="modal" data-target="#kumpulkanTugas" class="btn btn-primary"> <i class="ni ni-send text-white mr-3"></i>Serahkan Tugas</a>
+                    <div class="modal fade" id="kumpulkanTugas" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle"
+                        aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-centered" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="exampleModalLongTitle">Modal title</h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <div class="modal-body">
+                                    <form action=" {{route('deskjobs.serahkan_tugas', $deskjob->slug)}} " enctype="multipart/form-data" method="POST">
+                                        @csrf
+                                        @method('PUT')
+                                        <div class="form-group">
+                                                <label for="file_tugas" class="form-control-label">File Tugas</label>
+                                                <input class="form-control" type="file" name="file_tugas" id="file_tugas">
+                                        </div>
+                                        <div class="form-group">
+                                                <label for="catatan" class="form-control-label">Catatan</label>
+                                                <textarea class="form-control" type="text" name="catatan" id="catatan"></textarea>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                            <button type="submit" name="serahkanTugas" class="btn btn-primary">Submit</button>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 </div>
+@endsection
+@section('js')
+    <script src="{{asset('template/back-ui/vendor/timezz/timezz.js')}}"></script>
+    <script>
+        var due_date = "<?php echo $deskjob->due_date ?>"
+        console.log(due_date);
+        new TimezZ('.demo', {
+            date: due_date,
+            daysName: ' Hari',
+            hoursName: ' Jam',
+            minutesName: ' Menit',
+            secondsName: ' Detik',
+            numberTag: 'span',
+            letterTag: 'i',
+            stop: false, // 
+        });
+    </script>
 @endsection

@@ -29,5 +29,6 @@ Route::middleware(['auth'])->group(function () {
     Route::post('classrooms', 'ClassroomsController@create_participant')->name('classrooms.create_participant');
     Route::post('classrooms/create', 'ClassroomsController@store')->name('classrooms.store');
     Route::post('classrooms/{classroom}', 'ClassroomsController@theories')->name('classrooms.theories');
+    Route::put('deskjob/{deskjob}', 'DeskjobsController@show')->name('deskjobs.serahkan_tugas');
 });
 
