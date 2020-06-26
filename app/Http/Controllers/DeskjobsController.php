@@ -6,6 +6,7 @@ use App\Deskjob;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
+use App\Http\Controllers\DB;
 
 class DeskjobsController extends Controller
 {
@@ -16,7 +17,7 @@ class DeskjobsController extends Controller
      */
     public function index()
     {
-        //
+        return 'Hoi';
     }
 
     /**
@@ -68,8 +69,19 @@ class DeskjobsController extends Controller
             $deskjob->file = $file;
          }
 
-         $deskjob->save();
-         return redirect()->route('deskjobs.create', ['token' => $request->token])->with('status', 'Tugas berhasil ditambahkan');
+         $participants = \App\Participant::where(['classroom_id' => $request->classroom_id])->get();
+
+         if ($deskjob->save()) {
+             foreach ($participants as $key => $value) {
+                $deskjob_users = new \App\Deskjob_user;
+                $deskjob_users->user_id = $value->user_id;
+                $deskjob_users->deskjob_id = $deskjob->id;
+                $deskjob_users->save();
+             }
+         }
+
+         
+         return redirect()->route('deskjobs.show', $deskjob->slug)->with('status', 'Tugas berhasil ditambahkan');
 
     }
 
@@ -79,9 +91,12 @@ class DeskjobsController extends Controller
      * @param  \App\Deskjob  $deskjob
      * @return \Illuminate\Http\Response
      */
-    public function show(Deskjob $deskjob)
+    public function show($deskjob)
     {
-        //
+        
+        $deskjob = \App\Deskjob::where('slug', $deskjob)->first();
+
+        return view('back-ui.deskjobs.detail', compact('deskjob'));
     }
 
     /**

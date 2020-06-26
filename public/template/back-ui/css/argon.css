@@ -9092,6 +9092,10 @@ button.bg-darker:focus
 {
     border-radius: 50% !important;
 }
+.avatar-authors.rounded-circle img
+{
+    border-radius: 50% !important;
+}
 
 .rounded-pill
 {
@@ -18139,7 +18143,29 @@ a.text-darker:focus
     align-items: center;
     justify-content: center;
 }
+.avatar-authors
+{
+    font-size: 1rem;
+
+    display: inline-flex;
+
+    width: 30px; 
+    height: 30px;
+
+    color: #fff;
+    border-radius: .375rem;
+    background-color: #adb5bd;
+
+    align-items: center;
+    justify-content: center;
+}
 .avatar img
+{
+    width: 100%;
+
+    border-radius: .375rem;
+}
+.avatar-authors img
 {
     width: 100%;
 
@@ -29859,4 +29885,15 @@ input.datetimepicker[data-color='yellow'] + .bootstrap-datetimepicker-widget.dro
 .bootstrap-datetimepicker-widget.dropdown-black table td .btn[data-action='togglePeriod']
 {
     background: transparent;
+}
+
+/* Add */
+
+.download-deskjob-file:hover {
+    color: white;
+    background-color: #5e72e4;
+    -webkit-transition:background-color 0.5s ease-in;
+    -moz-transition:background-color 0.5s ease-in;
+    -o-transition:background-color 0.5s ease-in;
+    transition:background-color 0.5s ease-in;
 }

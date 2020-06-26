@@ -48,4 +48,8 @@ class User extends Authenticatable implements MustVerifyEmail
     public function theory(){
         return $this->hasMany('App\Theory');
     }
+
+    public function deskjob(){
+        return $this->hasMany('App\Deskjob');
+    }
 }

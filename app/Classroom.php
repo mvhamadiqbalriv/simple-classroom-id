@@ -20,4 +20,8 @@ class Classroom extends Model
     public function theory(){
         return $this->hasMany('App\Theory');
     }
+
+    public function deskjob(){
+        return $this->hasOne('App\Deskjob');
+    }
 }

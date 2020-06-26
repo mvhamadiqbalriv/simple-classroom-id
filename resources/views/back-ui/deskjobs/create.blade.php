@@ -15,7 +15,7 @@
                 <div class="card-body px-lg-5 py-lg-5">
                     @if(session('status')) <div class="alert alert-success text-center">{{session('status')}} </div>
                     @endif
-                    <form action="{{route('deskjobs.store')}}" method="POST">
+                    <form action="{{route('deskjobs.store')}}" method="POST" enctype="multipart/form-data">
                         @csrf
                         <div class="form-group">
                             <label for="judul" class="form-control-label">Judul</label>

@@ -53,3 +53,9 @@ $trail->parent('deskjobs');
 $trail->push('Tambah', route('deskjobs.create'));
 });
 
+// Home > Tugas > Detail
+Breadcrumbs::for('deskjob_detail', function ($trail, $deskjob) {
+$trail->parent('deskjobs');
+$trail->push($deskjob->judul, route('deskjobs.show', $deskjob->slug));
+});
+

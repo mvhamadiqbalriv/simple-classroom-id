@@ -487,19 +487,26 @@
                                 <a target="_blank" href="{!! route('deskjobs.create', ['token' => $classroom->token]) !!}" class="btn btn-sm btn-primary"><i class="fa fa-plus text-white"  aria-hidden="true"></i>&nbsp; Tugas</a>
                             </div>
                             @endif
+                        </div>
+                        <br>
+                        <div class="progress" style="height:20px;">
+                            <div class="progress-bar progress-bar-striped active" role="progressbar" aria-valuenow="40" aria-valuemin="0"
+                                aria-valuemax="100" style="width:40%">
+                                40%
                             </div>
+                        </div>
                     </div>
                     <div class="table-responsive">
                         <!-- Projects table -->
                         <table class="table table-fixed">
                             <tbody>
-                                @if ($theory->isEmpty())
+                                @if ($deskjob->isEmpty())
                                 <tr>
                                     <td>{{'Data belum tersedia'}}</td>
                                     
                                 </tr>
                                 @endif
-                                @foreach ($theory as $item)
+                                @foreach ($deskjob as $item)
                                 <tr>
                                     <td>
                                         <div class="media align-items-center">
@@ -507,6 +514,12 @@
                                                 <span class="mb-0 text-sm  font-weight-bold"><a href="#!"  class="lihatMateri" id="{{$item->id}}" style="color: black">{{$item->judul}}</a>  </span>
                                             </div>
                                         </div>
+                                    </td>
+                                    <td>
+                                        <span class="badge badge-dot mr-4">
+                                            <i class="bg-warning"></i>
+                                            <span class="status">pending</span>
+                                        </span>
                                     </td>
                                     <td>
                                     @if (Auth::user()->roles == 'Admin' || Auth::user()->id == $classroom->user_id)
