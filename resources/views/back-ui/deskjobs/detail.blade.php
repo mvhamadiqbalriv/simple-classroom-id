@@ -55,11 +55,32 @@
         <div class="card">
             <div class="card-body">
                 <h3 class="card-title">Kumpulkan Tugas</h3>
-                <div class="text-sm mb-3">
-                    <b>Batas Waktu : </b>
-                    <div class="demo" style="display: inline-block"></div>
+                <div class="text-sm mb-2">
+                    <span class="badge badge-dot mr-4 mb-3">
+                        <i class="bg-{{($deskjob_user->status == 'sudah') ? 'success' : 'warning'}} "></i>
+                        <span class="status"> {{$deskjob_user->status}} mengumpulkan </span>
+                    </span>
+                    @if ($deskjob_user->status == 'sudah')
+                        <a href=" {{asset('storage/'.$deskjob->file)}}" download>
+                            <div class="border border-dark download-deskjob-file rounded" >
+                                <div class="container" style="margin: 10px auto;"> <i class="fa fa-file mr-2" style="color:black" aria-hidden="true"></i>
+                                    {{$deskjob->file_name}} 
+                                </div>
+                            </div>
+                        </a>
+                    @elseif(date('Y-m-d H:i:s') <= $deskjob->due_date)
+                    <div class="mb-3">
+                        <b>Batas Waktu : </b>
+                            <div class="due_date_run" style="display: inline-block"></div>
+                    </div>
+                    @elseif(date('Y-m-d H:i:s') > $deskjob->due_date )
+                    <br>
+                    <b style="color:black;background-color:yellow">Waktu pengumpulan telah berakhir</b>
+                    <br>
+                    @endif
                 </div>
                 <div>
+                    @if ($deskjob_user->status == 'belum' && date('Y-m-d H:i:s') <= $deskjob->due_date)
                     <a href="#" data-toggle="modal" data-target="#kumpulkanTugas" class="btn btn-primary"> <i class="ni ni-send text-white mr-3"></i>Serahkan Tugas</a>
                     <div class="modal fade" id="kumpulkanTugas" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle"
                         aria-hidden="true">
@@ -92,6 +113,7 @@
                             </div>
                         </div>
                     </div>
+                    @endif
                 </div>
             </div>
         </div>
@@ -103,7 +125,7 @@
     <script>
         var due_date = "<?php echo $deskjob->due_date ?>"
         console.log(due_date);
-        new TimezZ('.demo', {
+        new TimezZ('.due_date_run', {
             date: due_date,
             daysName: ' Hari',
             hoursName: ' Jam',

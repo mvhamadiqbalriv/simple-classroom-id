@@ -22,6 +22,6 @@ class Classroom extends Model
     }
 
     public function deskjob(){
-        return $this->hasOne('App\Deskjob');
+        return $this->hasMany('App\Deskjob');
     }
 }

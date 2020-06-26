@@ -13,4 +13,8 @@ class Deskjob extends Model
     public function classroom(){
         return $this->belongsTo('App\Classroom');
     }
+
+    public function deskjob_user(){
+        return $this->hasMany('App\Deskjob_user');
+    }
 }

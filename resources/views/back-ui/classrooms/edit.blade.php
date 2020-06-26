@@ -511,7 +511,7 @@
                                     <td>
                                         <div class="media align-items-center">
                                             <div class="media-body ml-2">
-                                                <span class="mb-0 text-sm  font-weight-bold"><a href="#!"  class="lihatMateri" id="{{$item->id}}" style="color: black">{{$item->judul}}</a>  </span>
+                                                <span class="mb-0 text-sm  font-weight-bold"><a href="{{url('deskjobs/'.$item->slug)}}"  style="color: black">{{$item->judul}}</a>  </span>
                                             </div>
                                         </div>
                                     </td>
@@ -529,7 +529,7 @@
                                             <i class="fas fa-ellipsis-v"></i>
                                         </a>
                                         <div class="dropdown-menu dropdown-menu-right dropdown-menu-arrow">
-                                            <a class="dropdown-item ubahMateri" href="#" data-toggle="modal" data-target="#ubahMateri" id="{{$item->id}}" class="btn btn-primary btn-sm">Edit</a>
+                                            <a class="dropdown-item" href="{{url('deskjobs/'.$item->slug)}}" data-toggle="modal" data-target="#ubahMateri" id="{{$item->id}}" class="btn btn-primary btn-sm">Edit</a>
                                             <form onsubmit="return confirm('Apakah anda yakin menghapus materi ini?')" class="d-inline"
                                                 action="{{route('classrooms.theories', $classroom->token)}} " method="POST"> 
                                                 @csrf

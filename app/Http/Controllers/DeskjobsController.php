@@ -95,6 +95,7 @@ class DeskjobsController extends Controller
     {
         
         $deskjob = \App\Deskjob::where('slug', $deskjob)->first();
+        $deskjob_user = \App\Deskjob_user::where(['deskjob_id' => $deskjob->id, 'user_id' => Auth::user()->id])->first();
 
         if ($request->has('serahkanTugas')) {
             $request->validate([
@@ -114,7 +115,7 @@ class DeskjobsController extends Controller
              return redirect()->route('deskjobs.show', $deskjob->slug)->with('status', 'Tugas berhasil diserahkan');die;
         }
 
-        return view('back-ui.deskjobs.detail', compact('deskjob'));
+        return view('back-ui.deskjobs.detail', compact(['deskjob', 'deskjob_user']));
     }
 
     /**
