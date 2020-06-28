@@ -1,135 +1,384 @@
 @extends('layouts.back')
-@section('add_data')
-    <a href="{{route('classrooms.create')}} " class="btn btn-sm btn-neutral">Buat Kelas</a>
-    <a href="#" data-toggle="modal" data-target="#ikutiKelas" class="btn btn-sm btn-neutral">Ikuti Kelas</a>
-    <div class="modal fade" id="ikutiKelas" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
-        aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">Masukan Token</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <form action="{{route('classrooms.create_participant')}}" method="POST">
-                        @csrf
-                        <div class="form-group">
-                            <div class="input-group input-group-merge input-group-alternative mb-3">
-                                <div class="input-group-prepend">
-                                    <span class="input-group-text"><i class="ni ni-key-25"></i></span>
-                                </div>
-                                <input class="form-control" name="token" type="search" value="{{old('token', null)}}"
-                                placeholder="Token">
-                            </div>
-                            @error('token')
-                            <span class="text-danger"><small><b><i>{{$message}}</i></b></small> </span>
-                            @enderror
-                            @if (session('msgParticipantE'))
-                                <span class="text-danger"><small><b><i>{{session('msgParticipantE')}}</i></b></small> </span>
-                            @endif
-                            @if (session('msgParticipantS'))
-                                <span class="text-success"><small><b><i>{{session('msgParticipantS')}}</i></b></small> </span>
-                            @endif
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                            <button type="submit" class="btn btn-primary">Save changes</button>
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </div>
-@endsection
 @section('title')
-    Kelas
+    Tugas
 @endsection
 @section('breadcrumb')
-    {{ Breadcrumbs::render('classroom') }}
+{{ Breadcrumbs::render('deskjobs') }}
 @endsection
 @section('content')
-<div class="row ">
-    <div class="col-xl-4 col-md-6 mt--3">
-        <form class="navbar-search navbar-search-light form-inline mr-sm-3" id="navbar-search-main">
-                <div class="form-group mb-0" action="{{route('classrooms.index') }} ">
-                    <div class="input-group input-group-alternative input-group-merge">
-                        <div class="input-group-prepend">
-                            <span class="input-group-text"><i class="fas fa-search"></i></span>
-                        </div>
-                        <input class="form-control" name="keyword" value="{{Request::get('keyword')}}" placeholder="Search" type="text">
-                    </div>
+<div class="row">
+        <div class="col">
+            <div class="card bg-default shadow">
+                <div class="card-header bg-transparent border-0">
+                    <h3 class="text-white mb-0">Dark table</h3>
                 </div>
-                <button type="button" class="close" data-action="search-close" data-target="#navbar-search-main" aria-label="Close">
-                    <span aria-hidden="true">×</span>
-                </button>
-            </form>
-        </div>
-</div>
-<div class="row mt-4">
-    @if ($classrooms->isEmpty())
-    <div class="container text-center mt-6 mb-6">
-        <span>Maaf tidak ada data yang ditemukan</span>
-    </div>
-    @endif
-    @foreach ($classrooms as $item)
-    <div class="col-xl-3 col-md-6">
-        <div class="card card-stats">
-            <!-- Card body -->
-            <div class="card-body">
-                <div class="row">
-                    <div class="col">
-                        <span class="h2 font-weight-bold mb-0"><a style="color:black" href="{{route('classrooms.show', $item->token)}} ">{{$item->nama_kelas}}</a>  </span>
-                        <h5 class="card-title text-uppercase text-muted mb-0">{{$item->bidang_ilmu}} </h5>
-                    </div>
-                    <div class="col-auto">
-                        <div class="dropdown">
-                            <a class="btn btn-sm btn-icon-only text-light" href="#" role="button"
-                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                <i class="fas fa-ellipsis-v"></i>
-                            </a>
-                            <div class="dropdown-menu dropdown-menu-right dropdown-menu-arrow">
-                                @if (Auth::user()->roles == 'Admin' || Auth::user()->id == $item->user_id)
-                                <a class="dropdown-item" href="{{route('classrooms.show', $item->token)}} " class="btn btn-primary btn-sm">Show & Edit</a>
-                                <form onsubmit="return confirm('Apakah anda yakin menghapus kelas ini dan beserta isinya?')" class="d-inline"
-                                    action="{{route('classrooms.destroy', $item->id)}}" method="POST"> @csrf
-                                    <input type="hidden" name="_method" value="DELETE">
-                                    <input type="submit" value="Delete" class="dropdown-item">
-                                </form>
-                                @else
-                                <form onsubmit="return confirm('Apakah anda yakin akan keluar dari kelas ini?')" class="d-inline"
-                                    action="{{route('classrooms.update', Auth::user()->id)}}" method="POST"> @csrf
-                                    <input type="hidden" name="_method" value="PUT">
-                                    <input type="hidden" name="classroom_id" value="{{$item->id}} ">
-                                    <input type="submit" name="keluarKelas" value="Keluar" class="dropdown-item">
-                                </form>
-                                @endif
-                            </div>
-                        </div>
-                    </div>
+                <div class="table-responsive">
+                    <table class="table align-items-center table-dark table-flush">
+                        <thead class="thead-dark">
+                            <tr>
+                                <th scope="col" class="sort" data-sort="name">Project</th>
+                                <th scope="col" class="sort" data-sort="budget">Budget</th>
+                                <th scope="col" class="sort" data-sort="status">Status</th>
+                                <th scope="col">Users</th>
+                                <th scope="col" class="sort" data-sort="completion">Completion</th>
+                                <th scope="col"></th>
+                            </tr>
+                        </thead>
+                        <tbody class="list">
+                            <tr>
+                                <th scope="row">
+                                    <div class="media align-items-center">
+                                        <a href="#" class="avatar rounded-circle mr-3">
+                                            <img alt="Image placeholder" src="{{asset('template/back-ui/')}}/img/theme/bootstrap.jpg">
+                                        </a>
+                                        <div class="media-body">
+                                            <span class="name mb-0 text-sm">Argon Design System</span>
+                                        </div>
+                                    </div>
+                                </th>
+                                <td class="budget">
+                                    $2500 USD
+                                </td>
+                                <td>
+                                    <span class="badge badge-dot mr-4">
+                                        <i class="bg-warning"></i>
+                                        <span class="status">pending</span>
+                                    </span>
+                                </td>
+                                <td>
+                                    <div class="avatar-group">
+                                        <a href="#" class="avatar avatar-sm rounded-circle" data-toggle="tooltip"
+                                            data-original-title="Ryan Tompson">
+                                            <img alt="Image placeholder" src="{{asset('template/back-ui/')}}/img/theme/team-1.jpg">
+                                        </a>
+                                        <a href="#" class="avatar avatar-sm rounded-circle" data-toggle="tooltip"
+                                            data-original-title="Romina Hadid">
+                                            <img alt="Image placeholder" src="{{asset('template/back-ui/')}}/img/theme/team-2.jpg">
+                                        </a>
+                                        <a href="#" class="avatar avatar-sm rounded-circle" data-toggle="tooltip"
+                                            data-original-title="Alexander Smith">
+                                            <img alt="Image placeholder" src="{{asset('template/back-ui/')}}/img/theme/team-3.jpg">
+                                        </a>
+                                        <a href="#" class="avatar avatar-sm rounded-circle" data-toggle="tooltip"
+                                            data-original-title="Jessica Doe">
+                                            <img alt="Image placeholder" src="{{asset('template/back-ui/')}}/img/theme/team-4.jpg">
+                                        </a>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="d-flex align-items-center">
+                                        <span class="completion mr-2">60%</span>
+                                        <div>
+                                            <div class="progress">
+                                                <div class="progress-bar bg-warning" role="progressbar" aria-valuenow="60"
+                                                    aria-valuemin="0" aria-valuemax="100" style="width: 60%;"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td class="text-right">
+                                    <div class="dropdown">
+                                        <a class="btn btn-sm btn-icon-only text-light" href="#" role="button"
+                                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                            <i class="fas fa-ellipsis-v"></i>
+                                        </a>
+                                        <div class="dropdown-menu dropdown-menu-right dropdown-menu-arrow">
+                                            <a class="dropdown-item" href="#">Action</a>
+                                            <a class="dropdown-item" href="#">Another action</a>
+                                            <a class="dropdown-item" href="#">Something else here</a>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th scope="row">
+                                    <div class="media align-items-center">
+                                        <a href="#" class="avatar rounded-circle mr-3">
+                                            <img alt="Image placeholder" src="{{asset('template/back-ui/')}}/img/theme/angular.jpg">
+                                        </a>
+                                        <div class="media-body">
+                                            <span class="name mb-0 text-sm">Angular Now UI Kit PRO</span>
+                                        </div>
+                                    </div>
+                                </th>
+                                <td class="budget">
+                                    $1800 USD
+                                </td>
+                                <td>
+                                    <span class="badge badge-dot mr-4">
+                                        <i class="bg-success"></i>
+                                        <span class="status">completed</span>
+                                    </span>
+                                </td>
+                                <td>
+                                    <div class="avatar-group">
+                                        <a href="#" class="avatar avatar-sm rounded-circle" data-toggle="tooltip"
+                                            data-original-title="Ryan Tompson">
+                                            <img alt="Image placeholder" src="{{asset('template/back-ui/')}}/img/theme/team-1.jpg">
+                                        </a>
+                                        <a href="#" class="avatar avatar-sm rounded-circle" data-toggle="tooltip"
+                                            data-original-title="Romina Hadid">
+                                            <img alt="Image placeholder" src="{{asset('template/back-ui/')}}/img/theme/team-2.jpg">
+                                        </a>
+                                        <a href="#" class="avatar avatar-sm rounded-circle" data-toggle="tooltip"
+                                            data-original-title="Alexander Smith">
+                                            <img alt="Image placeholder" src="{{asset('template/back-ui/')}}/img/theme/team-3.jpg">
+                                        </a>
+                                        <a href="#" class="avatar avatar-sm rounded-circle" data-toggle="tooltip"
+                                            data-original-title="Jessica Doe">
+                                            <img alt="Image placeholder" src="{{asset('template/back-ui/')}}/img/theme/team-4.jpg">
+                                        </a>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="d-flex align-items-center">
+                                        <span class="completion mr-2">100%</span>
+                                        <div>
+                                            <div class="progress">
+                                                <div class="progress-bar bg-success" role="progressbar" aria-valuenow="100"
+                                                    aria-valuemin="0" aria-valuemax="100" style="width: 100%;"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td class="text-right">
+                                    <div class="dropdown">
+                                        <a class="btn btn-sm btn-icon-only text-light" href="#" role="button"
+                                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                            <i class="fas fa-ellipsis-v"></i>
+                                        </a>
+                                        <div class="dropdown-menu dropdown-menu-right dropdown-menu-arrow">
+                                            <a class="dropdown-item" href="#">Action</a>
+                                            <a class="dropdown-item" href="#">Another action</a>
+                                            <a class="dropdown-item" href="#">Something else here</a>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th scope="row">
+                                    <div class="media align-items-center">
+                                        <a href="#" class="avatar rounded-circle mr-3">
+                                            <img alt="Image placeholder" src="{{asset('template/back-ui/')}}/img/theme/sketch.jpg">
+                                        </a>
+                                        <div class="media-body">
+                                            <span class="name mb-0 text-sm">Black Dashboard</span>
+                                        </div>
+                                    </div>
+                                </th>
+                                <td class="budget">
+                                    $3150 USD
+                                </td>
+                                <td>
+                                    <span class="badge badge-dot mr-4">
+                                        <i class="bg-danger"></i>
+                                        <span class="status">delayed</span>
+                                    </span>
+                                </td>
+                                <td>
+                                    <div class="avatar-group">
+                                        <a href="#" class="avatar avatar-sm rounded-circle" data-toggle="tooltip"
+                                            data-original-title="Ryan Tompson">
+                                            <img alt="Image placeholder" src="{{asset('template/back-ui/')}}/img/theme/team-1.jpg">
+                                        </a>
+                                        <a href="#" class="avatar avatar-sm rounded-circle" data-toggle="tooltip"
+                                            data-original-title="Romina Hadid">
+                                            <img alt="Image placeholder" src="{{asset('template/back-ui/')}}/img/theme/team-2.jpg">
+                                        </a>
+                                        <a href="#" class="avatar avatar-sm rounded-circle" data-toggle="tooltip"
+                                            data-original-title="Alexander Smith">
+                                            <img alt="Image placeholder" src="{{asset('template/back-ui/')}}/img/theme/team-3.jpg">
+                                        </a>
+                                        <a href="#" class="avatar avatar-sm rounded-circle" data-toggle="tooltip"
+                                            data-original-title="Jessica Doe">
+                                            <img alt="Image placeholder" src="{{asset('template/back-ui/')}}/img/theme/team-4.jpg">
+                                        </a>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="d-flex align-items-center">
+                                        <span class="completion mr-2">72%</span>
+                                        <div>
+                                            <div class="progress">
+                                                <div class="progress-bar bg-danger" role="progressbar" aria-valuenow="72"
+                                                    aria-valuemin="0" aria-valuemax="100" style="width: 72%;"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td class="text-right">
+                                    <div class="dropdown">
+                                        <a class="btn btn-sm btn-icon-only text-light" href="#" role="button"
+                                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                            <i class="fas fa-ellipsis-v"></i>
+                                        </a>
+                                        <div class="dropdown-menu dropdown-menu-right dropdown-menu-arrow">
+                                            <a class="dropdown-item" href="#">Action</a>
+                                            <a class="dropdown-item" href="#">Another action</a>
+                                            <a class="dropdown-item" href="#">Something else here</a>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th scope="row">
+                                    <div class="media align-items-center">
+                                        <a href="#" class="avatar rounded-circle mr-3">
+                                            <img alt="Image placeholder" src="{{asset('template/back-ui/')}}/img/theme/react.jpg">
+                                        </a>
+                                        <div class="media-body">
+                                            <span class="name mb-0 text-sm">React Material Dashboard</span>
+                                        </div>
+                                    </div>
+                                </th>
+                                <td class="budget">
+                                    $4400 USD
+                                </td>
+                                <td>
+                                    <span class="badge badge-dot mr-4">
+                                        <i class="bg-info"></i>
+                                        <span class="status">on schedule</span>
+                                    </span>
+                                </td>
+                                <td>
+                                    <div class="avatar-group">
+                                        <a href="#" class="avatar avatar-sm rounded-circle" data-toggle="tooltip"
+                                            data-original-title="Ryan Tompson">
+                                            <img alt="Image placeholder" src="{{asset('template/back-ui/')}}/img/theme/team-1.jpg">
+                                        </a>
+                                        <a href="#" class="avatar avatar-sm rounded-circle" data-toggle="tooltip"
+                                            data-original-title="Romina Hadid">
+                                            <img alt="Image placeholder" src="{{asset('template/back-ui/')}}/img/theme/team-2.jpg">
+                                        </a>
+                                        <a href="#" class="avatar avatar-sm rounded-circle" data-toggle="tooltip"
+                                            data-original-title="Alexander Smith">
+                                            <img alt="Image placeholder" src="{{asset('template/back-ui/')}}/img/theme/team-3.jpg">
+                                        </a>
+                                        <a href="#" class="avatar avatar-sm rounded-circle" data-toggle="tooltip"
+                                            data-original-title="Jessica Doe">
+                                            <img alt="Image placeholder" src="{{asset('template/back-ui/')}}/img/theme/team-4.jpg">
+                                        </a>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="d-flex align-items-center">
+                                        <span class="completion mr-2">90%</span>
+                                        <div>
+                                            <div class="progress">
+                                                <div class="progress-bar bg-info" role="progressbar" aria-valuenow="90"
+                                                    aria-valuemin="0" aria-valuemax="100" style="width: 90%;"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td class="text-right">
+                                    <div class="dropdown">
+                                        <a class="btn btn-sm btn-icon-only text-light" href="#" role="button"
+                                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                            <i class="fas fa-ellipsis-v"></i>
+                                        </a>
+                                        <div class="dropdown-menu dropdown-menu-right dropdown-menu-arrow">
+                                            <a class="dropdown-item" href="#">Action</a>
+                                            <a class="dropdown-item" href="#">Another action</a>
+                                            <a class="dropdown-item" href="#">Something else here</a>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th scope="row">
+                                    <div class="media align-items-center">
+                                        <a href="#" class="avatar rounded-circle mr-3">
+                                            <img alt="Image placeholder" src="{{asset('template/back-ui/')}}/img/theme/vue.jpg">
+                                        </a>
+                                        <div class="media-body">
+                                            <span class="name mb-0 text-sm">Vue Paper UI Kit PRO</span>
+                                        </div>
+                                    </div>
+                                </th>
+                                <td class="budget">
+                                    $2200 USD
+                                </td>
+                                <td>
+                                    <span class="badge badge-dot mr-4">
+                                        <i class="bg-success"></i>
+                                        <span class="status">completed</span>
+                                    </span>
+                                </td>
+                                <td>
+                                    <div class="avatar-group">
+                                        <a href="#" class="avatar avatar-sm rounded-circle" data-toggle="tooltip"
+                                            data-original-title="Ryan Tompson">
+                                            <img alt="Image placeholder" src="{{asset('template/back-ui/')}}/img/theme/team-1.jpg">
+                                        </a>
+                                        <a href="#" class="avatar avatar-sm rounded-circle" data-toggle="tooltip"
+                                            data-original-title="Romina Hadid">
+                                            <img alt="Image placeholder" src="{{asset('template/back-ui/')}}/img/theme/team-2.jpg">
+                                        </a>
+                                        <a href="#" class="avatar avatar-sm rounded-circle" data-toggle="tooltip"
+                                            data-original-title="Alexander Smith">
+                                            <img alt="Image placeholder" src="{{asset('template/back-ui/')}}/img/theme/team-3.jpg">
+                                        </a>
+                                        <a href="#" class="avatar avatar-sm rounded-circle" data-toggle="tooltip"
+                                            data-original-title="Jessica Doe">
+                                            <img alt="Image placeholder" src="{{asset('template/back-ui/')}}/img/theme/team-4.jpg">
+                                        </a>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="d-flex align-items-center">
+                                        <span class="completion mr-2">100%</span>
+                                        <div>
+                                            <div class="progress">
+                                                <div class="progress-bar bg-success" role="progressbar" aria-valuenow="100"
+                                                    aria-valuemin="0" aria-valuemax="100" style="width: 100%;"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td class="text-right">
+                                    <div class="dropdown">
+                                        <a class="btn btn-sm btn-icon-only text-light" href="#" role="button"
+                                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                            <i class="fas fa-ellipsis-v"></i>
+                                        </a>
+                                        <div class="dropdown-menu dropdown-menu-right dropdown-menu-arrow">
+                                            <a class="dropdown-item" href="#">Action</a>
+                                            <a class="dropdown-item" href="#">Another action</a>
+                                            <a class="dropdown-item" href="#">Something else here</a>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
                 </div>
-                <p class="mt-5 mb-0 text-sm">
-                    <span class="text-nowrap">{{$item->user->name}}</span>
-                </p>
+                <div class="card-footer bg-default py-4">
+                <nav aria-label="...">
+                    <ul class="pagination justify-content-end mb-0">
+                    <li class="page-item disabled">
+                        <a class="page-link" href="#" tabindex="-1">
+                        <i class="fas fa-angle-left"></i>
+                        <span class="sr-only">Previous</span>
+                        </a>
+                    </li>
+                    <li class="page-item active">
+                        <a class="page-link" href="#">1</a>
+                    </li>
+                    <li class="page-item">
+                        <a class="page-link" href="#">2 <span class="sr-only">(current)</span></a>
+                    </li>
+                    <li class="page-item"><a class="page-link" href="#">3</a></li>
+                    <li class="page-item">
+                        <a class="page-link" href="#">
+                        <i class="fas fa-angle-right"></i>
+                        <span class="sr-only">Next</span>
+                        </a>
+                    </li>
+                    </ul>
+                </nav>
+                </div>
             </div>
         </div>
     </div>
-    @endforeach
-</div>
-<nav aria-label="Page navigation example">
-    <ul class="pagination justify-content-center">
-        {{$classrooms->appends(Request::all())->links()}}
-    </ul>
-</nav>
-@endsection
-@section('js')
-@if (session('msgParticipantE') || session('msgParticipantS') || $errors->has('token') )
-<script>
-    $(function() {
-            $('#ikutiKelas').modal('show');
-        });
-</script>
-@endif
-
 @endsection

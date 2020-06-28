@@ -17,7 +17,7 @@ class DeskjobsController extends Controller
      */
     public function index()
     {
-        return 'Hoi';
+        return view('back-ui.deskjobs.index');
     }
 
     /**
