@@ -20,13 +20,24 @@
                     </div>
                     <div class="justify-content-center">
                         <form action="{{route('users.index')}}">
-                            <div class="col-md-5 col-lg-3 col-sm-5 col-centered">
-                                <div class="input-group input-group mb-3">
-                                    <input type="text" class="form-control" value="{{Request::get('keyword')}}" name="keyword" placeholder="Cari berdasarkan nama" aria-label="Cari berdasarkan nama"
-                                        aria-describedby="button-addon2">
-                                    <div class="input-group-append">
-                                        <button class="btn btn-primary" type="submit" id="button-addon2">Filter</button>
+                            <div class="row mr-3 ml-3">
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <input  value="{{Request::get('keyword')}}" name="keyword" type="text" class="form-control"  placeholder="Cari berdasarkan nama / username"  >
                                     </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="form-group">
+                                        <select name="role" class="form-control" id="">
+                                            <option value="">-- Pilih Role --</option>
+                                            @foreach ($roles as $item)
+                                                <option value="{{$item->roles}}" {{($item->roles == Request::get('role')) ? 'selected' : null}} >{{$item->roles}}</option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <button class="btn btn-primary" type="submit">Filter</button>
                                 </div>
                             </div>
                         </form>
