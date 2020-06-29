@@ -124,7 +124,6 @@
     <script src="{{asset('template/back-ui/vendor/timezz/timezz.js')}}"></script>
     <script>
         var due_date = "<?php echo $deskjob->due_date ?>"
-        console.log(due_date);
         new TimezZ('.due_date_run', {
             date: due_date,
             daysName: ' Hari',

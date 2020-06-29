@@ -17,7 +17,9 @@ class DeskjobsController extends Controller
      */
     public function index()
     {
-        return view('back-ui.deskjobs.index');
+
+        $deskjob_users = \App\Deskjob_user::where(['user_id' => Auth::user()->id])->latest()->paginate(10);
+        return view('back-ui.deskjobs.index', compact('deskjob_users'));
     }
 
     /**
