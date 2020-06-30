@@ -12,6 +12,45 @@
                 <div class="card-header bg-transparent border-0">
                     <h3 class="text-white mb-0">Tugas</h3>
                 </div>
+                    <div class="justify-content-center">
+                        <form action="{{route('users.index')}}">
+                            <div class="row mr-3 ml-3">
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <input  value="{{Request::get('keyword')}}" name="keyword" type="text" class="form-control"  placeholder="Cari berdasarkan judul"  >
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <select name="role" class="form-control" id="">
+                                            <option value="">-- Pilih Kelas --</option>
+                                            {{-- @foreach ($roles as $item)
+                                                <option value="{{$item->roles}}" {{($item->roles == Request::get('role')) ? 'selected' : null}} >{{$item->roles}}</option>
+                                            @endforeach --}}
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-md-2">
+                                    <div class="form-group">
+                                        <select name="role" class="form-control" id="">
+                                            <option value="">-- Pilih Status --</option>
+                                            {{-- @foreach ($roles as $item)
+                                                <option value="{{$item->roles}}" {{($item->roles == Request::get('role')) ? 'selected' : null}} >{{$item->roles}}</option>
+                                            @endforeach --}}
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-md-1">
+                                    <button class="btn btn-primary btn-block" type="submit">Filter</button>
+                                </div>
+                                @if (!empty($_GET))
+                                <div class="col-md-1">
+                                    <a href=" {{url('deskjobs')}} "></a>
+                                </div>
+                                @endif
+                            </div>
+                        </form>
+                    </div>
                 <div class="table-responsive">
                     <table class="table align-items-center table-dark table-flush">
                         <thead class="thead-dark">
