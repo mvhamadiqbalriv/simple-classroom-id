@@ -3,10 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Deskjob;
+use App\Deskjob_user;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
-use App\Http\Controllers\DB;
+use Illuminate\Support\Facades\DB;
 
 class DeskjobsController extends Controller
 {
@@ -15,11 +16,28 @@ class DeskjobsController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
 
-        $deskjob_users = \App\Deskjob_user::where(['user_id' => Auth::user()->id])->latest()->paginate(10);
-        $deskjob_classroom = \App\Deskjob_user::where(['user_id' => Auth::user()->id])->latest()->paginate(10);
+        $deskjob_user = \App\Deskjob_user::latest();
+        $deskjob_users = $deskjob_user->where(['user_id' => Auth::user()->id])->paginate(10);
+        
+        if ($_GET) {
+            
+            $filterStatus = ($request->has('status')) ? $request->get('status') : null ;
+
+            $deskjob_users = $deskjob_user
+                                ->whereHas('deskjob', function ($query) {
+                                    $filterKeyword = ($_GET['keyword']) ? $_GET['keyword'] : null ;
+                                    $query->where('judul', 'LIKE', '%'.$filterKeyword.'%');
+                                    })
+                                ->where([
+                                    ['user_id', '=', Auth::user()->id],
+                                    ['status', '=', $filterStatus]
+                                    ])
+                                ->paginate(10);
+            
+        }
 
         return view('back-ui.deskjobs.index', compact('deskjob_users'));
     }

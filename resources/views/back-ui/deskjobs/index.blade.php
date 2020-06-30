@@ -13,30 +13,19 @@
                     <h3 class="text-white mb-0">Tugas</h3>
                 </div>
                     <div class="justify-content-center">
-                        <form action="{{route('users.index')}}">
+                        <form action="{{route('deskjobs.index')}}">
                             <div class="row mr-3 ml-3">
                                 <div class="col-md-4">
                                     <div class="form-group">
-                                        <input  value="{{Request::get('keyword')}}" name="keyword" type="text" class="form-control"  placeholder="Cari berdasarkan judul"  >
-                                    </div>
-                                </div>
-                                <div class="col-md-4">
-                                    <div class="form-group">
-                                        <select name="role" class="form-control" id="">
-                                            <option value="">-- Pilih Kelas --</option>
-                                            {{-- @foreach ($roles as $item)
-                                                <option value="{{$item->roles}}" {{($item->roles == Request::get('role')) ? 'selected' : null}} >{{$item->roles}}</option>
-                                            @endforeach --}}
-                                        </select>
+                                        <input  value="{{Request::get('keyword')}}" name="keyword" type="text" class="form-control bg-default"  placeholder="Cari berdasarkan judul"  >
                                     </div>
                                 </div>
                                 <div class="col-md-2">
                                     <div class="form-group">
-                                        <select name="role" class="form-control" id="">
+                                        <select name="status" class="form-control bg-default" id="">
                                             <option value="">-- Pilih Status --</option>
-                                            {{-- @foreach ($roles as $item)
-                                                <option value="{{$item->roles}}" {{($item->roles == Request::get('role')) ? 'selected' : null}} >{{$item->roles}}</option>
-                                            @endforeach --}}
+                                            <option value="sudah">Sudah</option>
+                                            <option value="belum">Belum</option>
                                         </select>
                                     </div>
                                 </div>
