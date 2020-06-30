@@ -20,8 +20,8 @@ class UsersController extends Controller
     {
         $users = \App\User::latest()->paginate(5);
         $roles = \App\User::select('roles')->distinct()->get();
-
-        if ($request) {
+        
+        if ($_GET) {
             $filterKeyword = ($request->has('keyword')) ? $request->get('keyword') : null ;
             $filterRoles = ($request->has('role')) ? $request->get('role') : null ;
             $users = \App\User::where([
