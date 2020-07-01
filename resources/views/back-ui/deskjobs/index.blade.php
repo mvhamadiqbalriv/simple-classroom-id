@@ -32,9 +32,9 @@
                                 <div class="col-md-1">
                                     <button class="btn btn-primary btn-block" type="submit">Filter</button>
                                 </div>
-                                @if (!empty($_GET))
+                                @if ($_GET)
                                 <div class="col-md-1">
-                                    <a href=" {{url('deskjobs')}} "></a>
+                                    <a href="{{url('deskjobs')}}" class="btn btn-primary btn-block">Reset</a>
                                 </div>
                                 @endif
                             </div>
