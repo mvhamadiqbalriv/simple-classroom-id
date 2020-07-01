@@ -24,8 +24,8 @@
                                     <div class="form-group">
                                         <select name="status" class="form-control bg-default" id="">
                                             <option value="">-- Pilih Status --</option>
-                                            <option value="sudah">Sudah</option>
-                                            <option value="belum">Belum</option>
+                                            <option value="sudah" {{((Request::get('status') == 'sudah') ? 'selected' : null )}}>Sudah</option>
+                                            <option value="belum" {{((Request::get('status') == 'belum') ? 'selected' : null )}}>Belum</option>
                                         </select>
                                     </div>
                                 </div>
