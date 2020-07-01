@@ -20,24 +20,15 @@ class DeskjobsController extends Controller
     {
 
         $deskjob_user = \App\Deskjob_user::latest();
-        $deskjob_users = $deskjob_user->where(['user_id' => Auth::user()->id])->paginate(10);
-        
-        if ($_GET) {
-            
-            $filterStatus = ($request->has('status')) ? $request->get('status') : null ;
-
-            $deskjob_users = $deskjob_user
-                                ->whereHas('deskjob', function ($query) {
-                                    $filterKeyword = ($_GET['keyword']) ? $_GET['keyword'] : null ;
-                                    $query->where('judul', 'LIKE', '%'.$filterKeyword.'%');
-                                    })
-                                ->where([
-                                    ['user_id', '=', Auth::user()->id],
-                                    ['status', '=', $filterStatus]
-                                    ])
-                                ->paginate(10);
-            
-        }
+        $deskjob_users = $deskjob_user->when($request->get('keyword'), function ($query, $val) use ($request) {
+                                            $query->whereHas('deskjob', function ($q) use ($val, $request) {
+                                                $q->where('judul', 'like', '%' . $val . '%');
+                                            });
+                                        })
+                                        ->when($request->get('status'), function ($query, $val) use ($request){
+                                            $query->where('status', '=', $val);
+                                        })
+                                        ->where(['user_id' => Auth::user()->id])->paginate(10);
 
         return view('back-ui.deskjobs.index', compact('deskjob_users'));
     }
