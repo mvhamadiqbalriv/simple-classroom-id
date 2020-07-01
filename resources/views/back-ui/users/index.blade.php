@@ -36,9 +36,14 @@
                                         </select>
                                     </div>
                                 </div>
-                                <div class="col-md-3">
-                                    <button class="btn btn-primary" type="submit">Filter</button>
+                                <div class="col-md-1">
+                                    <button class="btn btn-primary btn-block" type="submit">Filter</button>
                                 </div>
+                                @if ($_GET)
+                                <div class="col-md-1">
+                                    <a href="{{url('users')}}" class="btn btn-primary btn-block">Reset</a>
+                                </div>
+                                @endif
                             </div>
                         </form>
                     </div>
