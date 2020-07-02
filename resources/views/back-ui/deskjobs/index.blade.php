@@ -30,7 +30,7 @@
                                     </div>
                                 </div>
                                 <div class="col-md-1">
-                                    <button class="btn btn-primary btn-block" type="submit">Filter</button>
+                                    <button class="btn btn-primary btn-block" type="submit"> <i class="fa fa-filter"></i> Filter</button>
                                 </div>
                                 @if ($_GET)
                                 <div class="col-md-1">
