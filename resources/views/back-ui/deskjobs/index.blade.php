@@ -34,7 +34,7 @@
                                 </div>
                                 @if ($_GET)
                                 <div class="col-md-1">
-                                    <a href="{{url('deskjobs')}}" class="btn btn-primary btn-block">Reset</a>
+                                    <a href="{{url('deskjobs')}}" class="btn btn-primary btn-block"> <i class="fa fa-redo"></i> Reset</a>
                                 </div>
                                 @endif
                             </div>
