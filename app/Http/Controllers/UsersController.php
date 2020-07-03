@@ -59,7 +59,7 @@ class UsersController extends Controller
     {
         $request->validate([
             'name' => 'required|regex:/^[\pL\s\-]+$/u|max:50',
-            'username' => 'required|alpha_dash|unique:App\User,username|max:8|min:3',
+            'username' => 'required|alpha_dash|unique:App\User,username|max:12|min:6',
             'email' => 'required|unique:App\User,email',
             'roles' => 'required',
             'address' => 'max:255',

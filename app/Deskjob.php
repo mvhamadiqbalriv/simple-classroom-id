@@ -15,6 +15,6 @@ class Deskjob extends Model
     }
 
     public function deskjob_user(){
-        return $this->hasMany('App\Deskjob_user');
+        return $this->hasOne('App\Deskjob_user');
     }
 }

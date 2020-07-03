@@ -517,8 +517,8 @@
                                     </td>
                                     <td>
                                         <span class="badge badge-dot mr-4">
-                                            <i class="bg-warning"></i>
-                                            <span class="status">pending</span>
+                                            <i class="bg-{{($item->deskjob_user->status == 'sudah') ? 'success' : 'warning'}} "></i>
+                                            <span class="status"> {{$item->deskjob_user->status}} </span>
                                         </span>
                                     </td>
                                     <td>
